@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="no-referrer">
-<title>Apex XI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Blitz Draft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#08090c;--s1:#0f1118;--s2:#171a24;--s3:#1e2230;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
-  --gold:#e8b84b;--gold2:#f5d07a;--gold-dim:rgba(232,184,75,0.12);
+  --bg:#05060a;--s1:#0b0e16;--s2:#131826;--s3:#1a2132;
+  --border:rgba(255,255,255,0.07);--border2:rgba(0,224,255,0.18);
+  --elec:#00e0ff;--elec2:#7cf0ff;--elec-dim:rgba(0,224,255,0.12);
   --green:#1db954;--green-dim:rgba(29,185,84,0.12);
-  --red:#e84b4b;--text:#eef0f5;--muted:#6b7280;--muted2:#9ca3af;
+  --red:#ff4b4b;--text:#eef1f7;--muted:#6b7280;--muted2:#98a3b5;
 }
 html{height:100%}
 body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:16px;line-height:1.5}
@@ -23,30 +23,37 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 
 /* SCREENS */
 .screen{display:none;position:fixed;inset:0;z-index:10;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:2.5rem 1rem 4rem;padding-top:max(2.5rem,7vh)}
+.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2.5rem 1rem 4rem;box-sizing:border-box}
 #draftScreen{overflow:hidden}
 #draftScreen.active{justify-content:flex-start;padding:0;display:flex;flex-direction:column;height:100vh}
 
+.screen::before{content:'';position:fixed;inset:0;z-index:-1;background:var(--bg)}
+.screen::after{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse 70% 65% at 50% 48%, rgba(5,6,10,0.9) 0%, rgba(5,6,10,0.75) 40%, rgba(0,224,255,0.06) 75%, rgba(5,6,10,0.15) 100%)}
+#homeScreen::before,#lobbyScreen::before,#joinScreen::before{
+  background-image:url("background.jpg");background-size:cover;background-position:center;opacity:0.5;
+}
+#draftScreen::before,#draftScreen::after,#resultScreen::before,#resultScreen::after{display:none}
+
 /* HOME */
 #homeScreen{position:relative}
-.logo-mark{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#c8952a);display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;box-shadow:0 8px 40px rgba(232,184,75,0.45),0 0 0 3px rgba(232,184,75,0.3);position:relative;overflow:hidden}
+.logo-mark{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--elec),#0088aa);display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;box-shadow:0 8px 40px rgba(0,224,255,0.4),0 0 0 3px rgba(0,224,255,0.25);position:relative;overflow:hidden}
 .logo-mark::after{content:'';position:absolute;inset:-1px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,0.25),transparent);pointer-events:none}
-.logo-mark img{width:78%;height:78%;object-fit:contain;position:relative;z-index:1}
-.game-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,7rem);line-height:0.9;letter-spacing:0.04em;background:linear-gradient(160deg,#fff 0%,var(--gold) 55%,var(--gold2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.3rem;text-align:center}
+.logo-mark img{width:78%;height:78%;object-fit:contain;position:relative;z-index:1;border-radius:50%}
+.game-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.4rem,10.5vw,6.4rem);line-height:0.9;letter-spacing:0.04em;background:linear-gradient(160deg,#fff 0%,var(--elec) 55%,var(--elec2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.3rem;text-align:center}
 .game-tagline{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted2);margin-bottom:2.5rem}
 
 /* INPUTS */
 .input-wrap{position:relative;width:100%;max-width:340px;margin-bottom:1rem}
 .input-wrap label{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:0.4rem}
 input[type=text]{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:10px;padding:0.75rem 1rem;color:var(--text);font-family:'Barlow',sans-serif;font-size:1rem;transition:border-color 0.2s,box-shadow 0.2s;outline:none}
-input[type=text]:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,75,0.15)}
+input[type=text]:focus{border-color:var(--elec);box-shadow:0 0 0 3px rgba(0,224,255,0.15)}
 input[type=text]::placeholder{color:var(--muted)}
 
 /* BUTTONS */
 .btn{border:none;border-radius:10px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:0.06em;transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase}
-.btn-gold{background:linear-gradient(135deg,var(--gold),#c8952a);color:#08090c;padding:0.8rem 2.2rem;box-shadow:0 4px 20px rgba(232,184,75,0.25)}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(232,184,75,0.4)}
-.btn-gold:disabled{opacity:0.35;cursor:not-allowed;transform:none}
+.btn-elec{background:linear-gradient(135deg,var(--elec),#0099bb);color:#03060a;padding:0.8rem 2.2rem;box-shadow:0 4px 20px rgba(0,224,255,0.3)}
+.btn-elec:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,224,255,0.45)}
+.btn-elec:disabled{opacity:0.35;cursor:not-allowed;transform:none}
 .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2);padding:0.8rem 2.2rem}
 .btn-outline:hover{border-color:var(--muted2);background:var(--s2)}
 .btn-green{background:linear-gradient(135deg,#1db954,#148a3d);color:#fff;padding:0.8rem 2.2rem;box-shadow:0 4px 20px rgba(29,185,84,0.2)}
@@ -55,51 +62,20 @@ input[type=text]::placeholder{color:var(--muted)}
 .btn-sm{padding:0.55rem 1.2rem;font-size:0.85rem;border-radius:8px}
 .btn-ghost{background:transparent;color:var(--muted2);border:1px solid var(--border);padding:0.65rem 1.5rem;font-size:0.85rem}
 .btn-ghost:hover{border-color:var(--muted2);color:var(--text)}
-.btn-qr{background:var(--s2);color:var(--muted2);border:1px solid var(--border2);padding:0.5rem 1.2rem;font-size:0.78rem;border-radius:8px;letter-spacing:0.06em;margin-top:0.8rem}
-.btn-qr:hover{border-color:var(--muted2);color:var(--text)}
 
 /* CHOICE CARDS */
 .choice-row{display:flex;gap:14px;width:100%;max-width:340px;margin-bottom:1.5rem}
 .choice-card{flex:1;background:var(--s2);border:1.5px solid var(--border2);border-radius:14px;padding:1.2rem 1rem;cursor:pointer;transition:all 0.2s;text-align:center}
-.choice-card:hover{border-color:var(--gold-dim);background:var(--s3)}
-.choice-card.selected{border-color:var(--gold);background:var(--gold-dim)}
+.choice-card:hover{border-color:var(--elec-dim);background:var(--s3)}
+.choice-card.selected{border-color:var(--elec);background:var(--elec-dim)}
 .choice-card .cc-icon{font-size:1.8rem;margin-bottom:0.4rem}
 .choice-card .cc-label{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:0.08em;font-size:1rem}
 .choice-card .cc-sub{font-size:0.72rem;color:var(--muted);margin-top:2px}
 
-/* FIELD BACKGROUND — all screens */
-.screen::before{
-  content:'';position:fixed;inset:0;z-index:-1;
-  background:
-    linear-gradient(180deg,#1a5c2e 0%,#1f6e35 8%,#1a5c2e 16%,#1f6e35 24%,#1a5c2e 32%,#1f6e35 40%,#1a5c2e 48%,#1f6e35 56%,#1a5c2e 64%,#1f6e35 72%,#1a5c2e 80%,#1f6e35 88%,#1a5c2e 96%,#1f6e35 100%);
-  opacity:1;
-}
-.screen::after{
-  content:'';position:fixed;inset:0;z-index:-1;
-  background:radial-gradient(ellipse 70% 65% at 50% 48%, rgba(8,9,12,0.92) 0%, rgba(8,9,12,0.78) 35%, rgba(8,9,12,0.45) 65%, rgba(8,9,12,0.1) 100%);
-}
-#homeScreen::before{
-  background-image:url("images/footballbackground.jpg");
-  background-size:cover;background-position:center;opacity:0.55;
-}
-#homeScreen::after{
-  background:radial-gradient(ellipse 70% 65% at 50% 48%, rgba(8,9,12,0.88) 0%, rgba(8,9,12,0.72) 40%, rgba(232,184,75,0.08) 75%, rgba(8,9,12,0.2) 100%);
-}
-#draftScreen::before,#draftScreen::after{display:none}
-
-/* FORMATION PICKER */
-.formation-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:480px;margin-bottom:1.2rem}
-@media(min-width:500px){.formation-row{grid-template-columns:repeat(4,1fr)}}
-@media(min-width:680px){.formation-row{grid-template-columns:repeat(5,1fr)}}
-.form-btn{background:rgba(15,17,24,0.7);border:1.5px solid var(--border2);border-radius:10px;padding:0.65rem 0.5rem;cursor:pointer;transition:all 0.2s;text-align:center;color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:0.04em;backdrop-filter:blur(4px)}
-.form-btn:hover{border-color:var(--gold);background:rgba(232,184,75,0.1)}
-.form-btn.selected{border-color:var(--gold);background:rgba(232,184,75,0.18);color:var(--gold)}
-.form-sub{font-family:'Barlow',sans-serif;font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px}
-
 /* LOBBY */
 #lobbyScreen{position:relative}
 .room-code-display{background:var(--s2);border:1.5px solid var(--border2);border-radius:14px;padding:1.2rem 2rem;margin:1rem 0;text-align:center}
-.room-code-display .code{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:0.2em;color:var(--gold);line-height:1}
+.room-code-display .code{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:0.2em;color:var(--elec);line-height:1}
 .room-code-display .code-label{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem}
 .player-slots{display:flex;gap:12px;width:100%;max-width:380px;margin:1.2rem 0}
 .player-slot{flex:1;background:var(--s2);border:1.5px dashed var(--border2);border-radius:12px;padding:1rem;text-align:center;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all 0.3s}
@@ -110,547 +86,577 @@ input[type=text]::placeholder{color:var(--muted)}
 .player-slot.filled .ps-dot{background:var(--green)}
 .lobby-status{font-size:0.82rem;color:var(--muted2);text-align:center;background:var(--s2);border-radius:8px;padding:0.6rem 1.2rem;border:1px solid var(--border);margin-bottom:1rem;max-width:340px}
 .lobby-status.ready{color:var(--green);border-color:rgba(29,185,84,0.3)}
-.pulse-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:6px;vertical-align:middle;animation:pdot 1.4s ease-in-out infinite}
+.pulse-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--elec);margin-right:6px;vertical-align:middle;animation:pdot 1.4s ease-in-out infinite}
 @keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.7)}}
+.mode-note{font-size:0.78rem;color:var(--muted2);text-align:center;background:var(--s2);border-radius:8px;padding:0.55rem 1.1rem;border:1px solid var(--border);margin:0 0 1rem;max-width:340px}
+.mode-note b{color:var(--elec)}
 
 /* JOIN SCREEN */
-#joinScreen{background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(29,185,84,0.08) 0%,transparent 60%),var(--bg)}
+#joinScreen{background:transparent}
 .back-btn{position:absolute;top:1.2rem;left:1.2rem;background:transparent;border:1px solid var(--border2);border-radius:8px;padding:6px 12px;color:var(--muted2);font-size:0.8rem;cursor:pointer;font-family:'Barlow',sans-serif;transition:all 0.2s;letter-spacing:0.04em}
 .back-btn:hover{border-color:var(--muted2);color:var(--text)}
 .error-msg{font-size:0.8rem;color:var(--red);margin-top:0.4rem;min-height:1.2em}
 
-/* QR SCREEN */
-#qrScreen{background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(232,184,75,0.08) 0%,transparent 60%),var(--bg)}
-.qr-box{background:var(--s2);border:1.5px solid var(--border2);border-radius:18px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem;margin:1rem 0;width:100%;max-width:280px}
-.qr-box img{width:200px;height:200px;border-radius:10px;background:var(--s3);display:block}
-.qr-url{font-size:0.65rem;color:var(--muted);word-break:break-all;text-align:center;max-width:220px;line-height:1.5;background:var(--s3);border-radius:8px;padding:6px 10px;border:1px solid var(--border)}
-.qr-note{font-size:0.72rem;color:var(--muted);text-align:center;max-width:260px;line-height:1.6}
-
 /* DRAFT TOP BAR */
 .draft-top-bar{width:100%;background:var(--s1);border-bottom:1px solid var(--border);padding:0.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:100}
 .draft-top-bar .dtb-left{display:flex;align-items:center;gap:12px}
-.dtb-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.05em;color:var(--gold)}
+.dtb-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.05em;color:var(--elec)}
 .progress-pill{background:var(--s3);border-radius:20px;padding:3px 12px;font-size:0.75rem;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;letter-spacing:0.06em;border:1px solid var(--border)}
-.progress-pill span{color:var(--gold);font-weight:600}
+.progress-pill span{color:var(--elec);font-weight:600}
 .opp-pill{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:0.75rem;color:var(--muted2)}
 .opp-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0}
 .opp-dot.live{background:var(--green);animation:pdot 1.4s infinite}
 
-/* DRAFT SCREEN - contained, no body scroll needed */
-#draftScreen{overflow:hidden}
-#draftScreen.active{
-  padding:0;justify-content:flex-start;align-items:stretch;
-  width:100%;height:100vh;height:100dvh;
-  overflow:hidden
-}
+/* DRAFT SCREEN LAYOUT */
 .draft-body{flex:1;display:grid;grid-template-columns:1fr 380px;width:100%;min-height:0;overflow:hidden}
-.pitch-wrap{
-  position:relative;overflow:hidden;min-width:0;height:100%;
-  background:linear-gradient(180deg,#1a5c2e 0%,#1f6e35 8%,#1a5c2e 16%,#1f6e35 24%,#1a5c2e 32%,#1f6e35 40%,#1a5c2e 48%,#1f6e35 56%,#1a5c2e 64%,#1f6e35 72%,#1a5c2e 80%,#1f6e35 88%,#1a5c2e 96%,#1f6e35 100%)
-}
-.selection-panel{
-  background:var(--s1);
-  border-left:1px solid var(--border);
-  display:flex;flex-direction:column;overflow:hidden;
-  height:100%;min-height:0;min-width:0
-}
-@media(max-width:980px){
-  .draft-body{grid-template-columns:1fr 320px}
-}
+.deck-wrap{position:relative;overflow:hidden;min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;padding:2rem;background:radial-gradient(ellipse 60% 50% at 50% 40%, rgba(0,224,255,0.07) 0%, transparent 70%),var(--s1)}
+.lineup-panel{background:var(--s1);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;height:100%;min-height:0;min-width:0}
+@media(max-width:980px){.draft-body{grid-template-columns:1fr 320px}}
 @media(max-width:700px){
   #draftScreen.active{height:auto;min-height:100vh;min-height:100dvh;overflow-y:auto}
   .draft-body{grid-template-columns:1fr;overflow:visible}
-  .pitch-wrap{width:100%;height:70vw;min-height:200px;max-height:360px}
-  .selection-panel{width:100%;height:auto;min-height:60vw;max-height:none;border-left:none;border-top:1px solid var(--border);overflow:visible}
-  .sp-cards{max-height:none;overflow:visible}
-  #draftScreen::before,#draftScreen::after{display:none}
+  .deck-wrap{height:auto;min-height:60vh;padding:1.2rem}
+  .lineup-panel{width:100%;height:auto;min-height:40vh;max-height:none;border-left:none;border-top:1px solid var(--border);overflow:visible}
 }
-.pitch-lines{position:absolute;inset:0;pointer-events:none}
-.pitch-lines svg{width:100%;height:100%}
 
-/* SLOTS */
-.pslot{position:absolute;transform:translate(-50%,-50%);width:98px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:transform 0.15s,width 0.15s;user-select:none}
-.pslot:hover{transform:translate(-50%,-50%) scale(1.08)}
-.pslot-img{width:100%;aspect-ratio:1170/1600;border-radius:9px;background:rgba(0,0,0,0.45);border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;transition:border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(2px)}
-.pslot-img img{width:100%;height:100%;object-fit:cover;display:block;border-radius:7px}
-.pslot-img .pos-text{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.08em;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.8)}
-.pslot.available .pslot-img{border-color:var(--gold);animation:slotpulse 1.8s ease-in-out infinite}
-.pslot.available:hover .pslot-img{box-shadow:0 0 16px rgba(232,184,75,0.6);animation:none}
-.pslot.filled .pslot-img{border:none;background:transparent;backdrop-filter:none;box-shadow:none}
-.pslot.active .pslot-img{border-color:var(--gold2);box-shadow:0 0 20px rgba(232,184,75,0.7);animation:none}
-@media(max-width:980px){.pslot{width:80px}}
-@media(max-width:700px){.pslot{width:clamp(56px,18vw,84px)}}
-@keyframes slotpulse{0%,100%{box-shadow:0 0 0 0 rgba(232,184,75,0.5)}50%{box-shadow:0 0 0 6px rgba(232,184,75,0)}}
-
-/* SELECTION PANEL (inner elements) */
-.sp-header{padding:1rem 1rem 0.6rem;border-bottom:1px solid var(--border);flex-shrink:0}
-.sp-title{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:1rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted2);margin-bottom:4px}
-.sp-pos{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--gold);line-height:1}
-.sp-hint{font-size:0.78rem;color:var(--muted);margin-top:4px}
-.sp-cards{flex:1;overflow-y:auto;padding:10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:min-content;gap:10px;scrollbar-width:thin;scrollbar-color:var(--s3) transparent;align-content:start}
-.sp-idle{grid-column:1/-1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;text-align:center;color:var(--muted)}
-.sp-idle .idle-icon{font-size:2.5rem;margin-bottom:0.8rem;opacity:0.4}
-.sp-idle p{font-size:0.85rem}
-
-/* PICK CARD — image fills the entire card, no text overlay */
-.pick-card{background:var(--s2);border:1.5px solid var(--border);border-radius:11px;cursor:pointer;transition:all 0.18s;overflow:hidden;aspect-ratio:0.78;position:relative;width:100%;min-width:0;max-width:100%}
-.pick-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 4px 16px rgba(232,184,75,0.15)}
-.pick-card-img{width:100%;height:100%;max-width:100%;object-fit:cover;display:block;background:var(--s3)}
-
-/* WAITING OVERLAY */
-.waiting-overlay{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:12px}
-.waiting-overlay h3{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--muted2)}
-.waiting-overlay p{font-size:0.85rem;color:var(--muted)}
-.spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.9s linear infinite}
+/* DECK CARD */
+.deck-timer{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--elec);background:var(--s2);border:2.5px solid var(--border2);border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;position:absolute;top:1.2rem;right:1.2rem;transition:color .2s,border-color .2s;z-index:5}
+.deck-timer.low{color:var(--red);border-color:var(--red);animation:pdot 0.6s ease-in-out infinite}
+.deck-card{width:min(300px,72vw);aspect-ratio:640/898;border-radius:16px;overflow:hidden;cursor:pointer;position:relative;background:var(--s2);border:2px solid var(--border2);box-shadow:0 10px 40px rgba(0,224,255,0.18);transition:transform .15s,border-color .15s}
+.deck-card:hover{transform:translateY(-4px);border-color:var(--elec)}
+.deck-card img{width:100%;height:100%;object-fit:cover;display:block}
+.deck-card .dc-flip-hint{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,0.8),transparent);color:#fff;font-size:0.68rem;text-align:center;padding:10px 0 8px;letter-spacing:0.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif}
+.deck-card .dc-name{position:absolute;top:0;left:0;right:0;background:linear-gradient(180deg,rgba(0,0,0,0.75),transparent);color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.85rem;text-align:center;padding:8px 6px 16px}
+.deck-count{font-size:0.78rem;color:var(--muted2);letter-spacing:0.06em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+.deck-actions{display:flex;gap:12px}
+.deck-empty,.deck-waiting{color:var(--muted2);text-align:center;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:12px}
+.deck-empty h3,.deck-waiting h3{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--muted2)}
+.spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--elec);border-radius:50%;animation:spin 0.9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* LINEUP PANEL */
+.lineup-header{padding:1rem 1rem 0.8rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.lineup-title{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:1rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted2);margin-bottom:2px}
+.lineup-count{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;color:var(--elec);line-height:1}
+.lineup-list{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:var(--s3) transparent}
+.lineup-item{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:6px 10px;animation:liin 0.25s ease}
+@keyframes liin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.lineup-item img{width:34px;height:48px;object-fit:cover;border-radius:5px;background:var(--s3);flex-shrink:0}
+.lineup-item .li-name{font-size:0.85rem;font-weight:600}
+.lineup-item .li-sub{font-size:0.68rem;color:var(--muted2)}
+.lineup-empty-slot{display:flex;align-items:center;gap:10px;border:1.5px dashed var(--border2);border-radius:10px;padding:10px;color:var(--muted);font-size:0.78rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.05em;text-transform:uppercase}
 
 /* RESULT */
 #resultScreen{position:relative;width:100%}
 #resultScreen.active{align-items:center}
 .result-trophy{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,8vw,5rem);letter-spacing:0.04em;line-height:1;text-align:center;margin-bottom:0.3rem}
-.result-trophy.win{background:linear-gradient(135deg,#fff 0%,var(--gold) 50%,var(--gold2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.result-trophy.win{background:linear-gradient(135deg,#fff 0%,var(--elec) 50%,var(--elec2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .result-trophy.draw{color:var(--muted2)}
 .result-score-box{display:flex;align-items:center;gap:1.5rem;background:var(--s2);border:1px solid var(--border2);border-radius:18px;padding:1.2rem 2.5rem;margin:1.2rem 0}
 .rsc{display:flex;flex-direction:column;align-items:center;gap:4px}
 .rsc-user{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2)}
 .rsc-goals{font-family:'Bebas Neue',sans-serif;font-size:4rem;line-height:1}
-.rsc-goals.hi{color:var(--gold)}
+.rsc-goals.hi{color:var(--elec)}
 .rsvs{font-size:1rem;color:var(--muted);font-weight:300}
-.result-stats-row{display:flex;gap:10px;margin-bottom:1.2rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:600px}
-.rst-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:0.7rem 1rem;text-align:center;min-width:80px}
-.rst-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold);line-height:1}
-.rst-lbl{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-top:2px}
-.result-pitches{display:flex;gap:1.8rem;width:100%;max-width:1040px;margin-bottom:2rem;flex-wrap:wrap;justify-content:center}
-.result-pitch-block{flex:1;min-width:320px;max-width:480px}
-.rp-header{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);text-align:center;margin-bottom:10px}
-.result-pitch{position:relative;width:100%;aspect-ratio:0.72;border-radius:14px;overflow:hidden;
-  background:linear-gradient(180deg,#1a5c2e 0%,#1f6e35 8%,#1a5c2e 16%,#1f6e35 24%,#1a5c2e 32%,#1f6e35 40%,#1a5c2e 48%,#1f6e35 56%,#1a5c2e 64%,#1f6e35 72%,#1a5c2e 80%,#1f6e35 88%,#1a5c2e 96%,#1f6e35 100%);
-  border:1px solid var(--border2)}
-.result-pitch svg{position:absolute;inset:0;width:100%;height:100%}
-.rp-slot{position:absolute;transform:translate(-50%,-50%);width:17.5%}
-.rp-slot img{width:100%;aspect-ratio:0.78;object-fit:cover;border-radius:7px;display:block}
+.result-rosters{display:flex;gap:1.8rem;width:100%;max-width:900px;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
+.result-roster-block{flex:1;min-width:280px;max-width:420px}
+.result-roster-header{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);text-align:center;margin-bottom:10px}
+.result-roster-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--s1);border:1px solid var(--border2);border-radius:14px;padding:12px}
+.result-roster-grid img{width:100%;aspect-ratio:640/898;object-fit:cover;border-radius:6px;display:block}
 .result-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:1rem}
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.2)}
-::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;opacity:0.5}
+::-webkit-scrollbar-thumb{background:var(--elec);border-radius:3px;opacity:0.5}
 .conn-badge{position:fixed;bottom:10px;right:10px;z-index:200;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 9px;border-radius:20px;background:var(--s2);border:1px solid var(--border2);color:var(--muted2);opacity:0.85;pointer-events:none}
-.conn-badge.peer{border-color:var(--gold);color:var(--gold)}
+.conn-badge.peer{border-color:var(--elec);color:var(--elec)}
 </style>
 </head>
 <body>
 
-<div class="conn-badge" id="connBadge" style="display:none">Server</div>
-
-<!-- ░░░ HOME ░░░ -->
+<!-- HOME -->
 <div id="homeScreen" class="screen active">
-  <div class="logo-mark"><img src="images/footballlogo.png" alt="UCL"></div>
-  <div class="game-title">APEX XI</div>
-  <div class="game-tagline">Draft. Compete. Dominate.</div>
+  <div class="logo-mark"><img src="logo.jpg" alt="BlitzDraft"></div>
+  <div class="game-title">BlitzDraft</div>
+  <div class="game-tagline">Flip. Pick. Build Your Squad.</div>
   <div class="input-wrap">
-    <label>Your Username</label>
-    <input type="text" id="usernameInput" placeholder="Enter your name..." maxlength="20" autocomplete="off">
+    <label>Your Name</label>
+    <input type="text" id="usernameInput" placeholder="Enter your name..." maxlength="16" autocomplete="off">
   </div>
   <div class="choice-row">
     <div class="choice-card" id="ccHost" onclick="selectMode('host')">
-      <div class="cc-icon">🏟️</div>
+      <div class="cc-icon">🎮</div>
       <div class="cc-label">Host</div>
       <div class="cc-sub">Create a room</div>
     </div>
     <div class="choice-card" id="ccJoin" onclick="selectMode('join')">
-      <div class="cc-icon">🔗</div>
+      <div class="cc-icon">🔑</div>
       <div class="cc-label">Join</div>
       <div class="cc-sub">Enter a code</div>
     </div>
   </div>
-   <button class="btn btn-gold" id="homeNextBtn" onclick="homeNext()" disabled>Continue</button>
+  <button class="btn btn-elec" id="homeNextBtn" onclick="homeNext()" disabled>Next</button>
   <div class="error-msg" id="homeError"></div>
-   <button class="btn btn-qr" onclick="showQR()">📱 Share / QR Code</button>
 </div>
 
-<!-- ░░░ QR SCREEN ░░░ -->
-<div id="qrScreen" class="screen">
-  <button class="back-btn" onclick="showScreen('homeScreen')">← Back</button>
-  <div class="logo-mark" style="width:44px;height:44px;margin-bottom:0.8rem"><img src="images/footballlogo.png" alt="UCL"></div>
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--gold);margin-bottom:0.2rem">Share Apex XI</div>
-  <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem">Scan to open on another device</div>
-  <div class="qr-box">
-    <img id="qrImg" src="" alt="QR Code" onerror="this.style.opacity='0.3'">
-    <div class="qr-url" id="qrUrl"></div>
-  </div>
-  <p class="qr-note">This file must be hosted at a URL (e.g. GitHub Pages, a local server) for the QR code to work across devices. The multiplayer itself works across devices as long as both players are connected to the internet.</p>
-</div>
-
-<!-- ░░░ LOBBY (HOST) ░░░ -->
+<!-- LOBBY (HOST) -->
 <div id="lobbyScreen" class="screen">
-  <button class="back-btn" onclick="goHome()">← Back</button>
-  <div class="logo-mark" style="width:44px;height:44px;margin-bottom:0.8rem"><img src="images/footballlogo.png" alt="UCL"></div>
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--gold);margin-bottom:0.2rem">Room Lobby</div>
-  <div style="font-size:0.78rem;color:var(--muted);margin-bottom:1.2rem">Share this code with your opponent</div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--elec);margin-bottom:0.4rem">Room Lobby</div>
   <div class="room-code-display">
     <div class="code-label">Room Code</div>
     <div class="code" id="lobbyCode">—</div>
   </div>
   <div class="player-slots">
-    <div class="player-slot filled" id="slot0">
-      <div class="ps-dot"></div>
-      <div class="ps-name" id="slotName0">—</div>
-      <div class="ps-sub" id="slotSub0">Host</div>
-    </div>
-    <div class="player-slot" id="slot1">
-      <div class="ps-dot"></div>
-      <div class="ps-name" id="slotName1">Waiting...</div>
-      <div class="ps-sub">Guest</div>
-    </div>
+    <div class="player-slot" id="slot0"><span class="ps-dot"></span><span class="ps-name" id="slotName0">You</span><span class="ps-sub">Host</span></div>
+    <div class="player-slot" id="slot1"><span class="ps-dot"></span><span class="ps-name" id="slotName1">Waiting...</span><span class="ps-sub">Guest</span></div>
   </div>
-  <div style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.6rem;text-align:center;letter-spacing:0.05em;text-transform:uppercase">Choose Your Formation</div>
-  <div class="formation-row" id="lobbyFormationRow">
-    <div class="form-btn" data-f="4-3-3" onclick="pickFormation(this,'lobby')">4-3-3<div class="form-sub">Attack</div></div>
-    <div class="form-btn" data-f="4-4-2" onclick="pickFormation(this,'lobby')">4-4-2<div class="form-sub">Classic</div></div>
-    <div class="form-btn" data-f="4-2-3-1" onclick="pickFormation(this,'lobby')">4-2-3-1<div class="form-sub">Control</div></div>
-    <div class="form-btn" data-f="4-1-2-1-2" onclick="pickFormation(this,'lobby')">4-1-2-1-2<div class="form-sub">Diamond</div></div>
-    <div class="form-btn" data-f="4-4-1-1" onclick="pickFormation(this,'lobby')">4-4-1-1<div class="form-sub">Compact</div></div>
-    <div class="form-btn" data-f="3-4-3" onclick="pickFormation(this,'lobby')">3-4-3<div class="form-sub">Blitz</div></div>
-    <div class="form-btn" data-f="3-5-2" onclick="pickFormation(this,'lobby')">3-5-2<div class="form-sub">Width</div></div>
-    <div class="form-btn" data-f="5-4-1" onclick="pickFormation(this,'lobby')">5-4-1<div class="form-sub">Fortress</div></div>
-    <div class="form-btn" data-f="5-2-1-2" onclick="pickFormation(this,'lobby')">5-2-1-2<div class="form-sub">Counter</div></div>
+  <div id="lobbySportHeading" style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.6rem;text-align:center;letter-spacing:0.05em;text-transform:uppercase">Choose Your Sport</div>
+  <div class="choice-row" id="lobbySportRow">
+    <div class="choice-card" id="lobbySportFootball" onclick="pickSport('football')">
+      <div class="cc-icon">⚽</div>
+      <div class="cc-label">Football</div>
+      <div class="cc-sub">Apex XI pool</div>
+    </div>
+    <div class="choice-card" id="lobbySportBasketball" onclick="pickSport('basketball')">
+      <div class="cc-icon">🏀</div>
+      <div class="cc-label">Basketball</div>
+      <div class="cc-sub">All-Stars pool</div>
+    </div>
   </div>
   <div class="lobby-status" id="lobbyStatus"><span class="pulse-dot"></span>Waiting for opponent to join...</div>
-  <button class="btn btn-gold" id="lobbyStartBtn" onclick="startDraft()" disabled>Start Draft</button>
+  <button class="btn btn-elec" id="lobbyStartBtn" onclick="startDraft()" disabled>Start Draft</button>
+  <button class="btn btn-ghost btn-sm" style="margin-top:0.8rem" onclick="goHome()">← Leave Room</button>
 </div>
 
-<!-- ░░░ JOIN SCREEN ░░░ -->
+<!-- JOIN SCREEN -->
 <div id="joinScreen" class="screen">
   <button class="back-btn" onclick="leaveJoinScreen()">← Back</button>
-  <div class="logo-mark" style="width:44px;height:44px;margin-bottom:0.8rem"><img src="images/footballlogo.png" alt="UCL"></div>
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--gold);margin-bottom:1.5rem">Join a Room</div>
+  <div class="logo-mark" style="width:44px;height:44px;margin-bottom:0.8rem"><img src="logo.jpg" alt="BlitzDraft"></div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--elec);margin-bottom:1.5rem">Join a Room</div>
   <div class="input-wrap">
     <label>Room Code</label>
     <input type="text" id="joinCodeInput" placeholder="Enter 4-digit code..." maxlength="4" autocomplete="off" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
   </div>
-  <div style="font-size:0.78rem;color:var(--muted2);margin:0.8rem 0 0.6rem;text-align:center;letter-spacing:0.05em;text-transform:uppercase">Choose Your Formation</div>
-  <div class="formation-row" id="joinFormationRow">
-    <div class="form-btn" data-f="4-3-3" onclick="pickFormation(this,'join')">4-3-3<div class="form-sub">Attack</div></div>
-    <div class="form-btn" data-f="4-4-2" onclick="pickFormation(this,'join')">4-4-2<div class="form-sub">Classic</div></div>
-    <div class="form-btn" data-f="4-2-3-1" onclick="pickFormation(this,'join')">4-2-3-1<div class="form-sub">Control</div></div>
-    <div class="form-btn" data-f="4-1-2-1-2" onclick="pickFormation(this,'join')">4-1-2-1-2<div class="form-sub">Diamond</div></div>
-    <div class="form-btn" data-f="4-4-1-1" onclick="pickFormation(this,'join')">4-4-1-1<div class="form-sub">Compact</div></div>
-    <div class="form-btn" data-f="3-4-3" onclick="pickFormation(this,'join')">3-4-3<div class="form-sub">Blitz</div></div>
-    <div class="form-btn" data-f="3-5-2" onclick="pickFormation(this,'join')">3-5-2<div class="form-sub">Width</div></div>
-    <div class="form-btn" data-f="5-4-1" onclick="pickFormation(this,'join')">5-4-1<div class="form-sub">Fortress</div></div>
-    <div class="form-btn" data-f="5-2-1-2" onclick="pickFormation(this,'join')">5-2-1-2<div class="form-sub">Counter</div></div>
-  </div>
-  <button class="btn btn-green" id="joinBtn" onclick="joinRoom()" disabled>JOIN GAME</button>
+  <button class="btn btn-green" id="joinBtn" onclick="joinRoom()" disabled>Join Room</button>
   <div class="error-msg" id="joinError"></div>
 </div>
 
-<!-- ░░░ DRAFT SCREEN ░░░ -->
+<!-- DRAFT SCREEN -->
 <div id="draftScreen" class="screen">
   <div class="draft-top-bar">
     <div class="dtb-left">
-      <span class="dtb-title">APEX XI</span>
-      <span class="progress-pill"><span id="draftFilled">0</span>/11</span>
+      <div class="dtb-title">BlitzDraft</div>
+      <div class="progress-pill">You: <span id="draftFilled">0</span>/<span id="draftTarget">8</span></div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <div class="opp-pill">
-        <div class="opp-dot live" id="oppDot"></div>
-        <span id="oppProgressLabel">Opponent: 0/11</span>
-      </div>
-    </div>
+    <div class="opp-pill"><span class="opp-dot live" id="oppDot"></span><span id="oppProgressLabel">Opponent: 0/8</span></div>
   </div>
   <div class="draft-body">
-    <div class="pitch-wrap" id="pitchWrap">
-      <div class="pitch-lines">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="2" width="94" height="96" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
-          <line x1="3" y1="50" x2="97" y2="50" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
-          <circle cx="50" cy="50" r="10" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
-          <circle cx="50" cy="50" r="0.8" fill="rgba(255,255,255,0.2)"/>
-          <rect x="25" y="2" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-          <rect x="37" y="2" width="26" height="7" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.4"/>
-          <rect x="25" y="80" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-          <rect x="37" y="91" width="26" height="7" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.4"/>
-        </svg>
-      </div>
-      <div id="pitchSlots" style="position:absolute;inset:0"></div>
+    <div class="deck-wrap" id="deckWrap">
+      <!-- populated by JS -->
     </div>
-    <div class="selection-panel" id="selPanel">
-      <div class="sp-header">
-        <div class="sp-title" id="spTitle">Select a Position</div>
-        <div class="sp-pos" id="spPos">–</div>
-        <div class="sp-hint" id="spHint">Tap any glowing slot on the pitch</div>
+    <div class="lineup-panel">
+      <div class="lineup-header">
+        <div class="lineup-title">Your Lineup</div>
+        <div class="lineup-count" id="lineupCount">0 / 8</div>
       </div>
-      <div id="spContent" class="sp-cards">
-        <div class="sp-idle"><div class="idle-icon">⚽</div><p>Click any glowing slot<br>on the pitch to pick a player</p></div>
-      </div>
+      <div class="lineup-list" id="lineupList"></div>
     </div>
   </div>
 </div>
 
-<!-- ░░░ RESULT SCREEN ░░░ -->
+<!-- RESULT SCREEN -->
 <div id="resultScreen" class="screen">
-  <div class="result-trophy" id="resultTrophy"></div>
-  <div style="font-size:0.8rem;color:var(--muted2);letter-spacing:0.1em;margin-bottom:0.5rem" id="resultSub"></div>
+  <div class="result-trophy" id="resultTrophy">—</div>
   <div class="result-score-box">
-    <div class="rsc"><div class="rsc-user" id="r_myName">You</div><div class="rsc-goals" id="r_myGoals">0</div></div>
+    <div class="rsc"><div class="rsc-user" id="resultMeName">You</div><div class="rsc-goals" id="resultMeScore">0</div></div>
     <div class="rsvs">vs</div>
-    <div class="rsc"><div class="rsc-user" id="r_oppName">Opponent</div><div class="rsc-goals" id="r_oppGoals">0</div></div>
+    <div class="rsc"><div class="rsc-user" id="resultOppName">Opponent</div><div class="rsc-goals" id="resultOppScore">0</div></div>
   </div>
-  <div class="result-stats-row">
-    <div class="rst-card"><div class="rst-val" id="r_ovr">—</div><div class="rst-lbl">Avg OVR</div></div>
-    <div class="rst-card"><div class="rst-val" id="r_chem">—</div><div class="rst-lbl">Chemistry</div></div>
-    <div class="rst-card"><div class="rst-val" id="r_score">—</div><div class="rst-lbl">My Score</div></div>
-    <div class="rst-card"><div class="rst-val" id="r_opp_score">—</div><div class="rst-lbl">Opp Score</div></div>
+  <div class="result-rosters">
+    <div class="result-roster-block">
+      <div class="result-roster-header" id="resultMeHeader">Your Squad</div>
+      <div class="result-roster-grid" id="resultMeGrid"></div>
+    </div>
+    <div class="result-roster-block">
+      <div class="result-roster-header" id="resultOppHeader">Opponent's Squad</div>
+      <div class="result-roster-grid" id="resultOppGrid"></div>
+    </div>
   </div>
-  <div class="result-pitches" id="resultPitches"></div>
   <div class="result-btns">
-    <button class="btn btn-gold" onclick="playAgain()">Play Again</button>
-    <button class="btn btn-ghost" onclick="goHome()">Home</button>
+    <button class="btn btn-elec" onclick="playAgain()">Play Again</button>
+    <button class="btn btn-outline" onclick="goHome()">Home</button>
   </div>
 </div>
+
+<div class="conn-badge" id="connBadge" style="display:none">Connecting…</div>
 
 <script>
 // ═══════════════════════════════════════════════
-//  PLAYERS
-//  Image path notes (as of this build):
-//   - Most soccer players now point at local /images/*.webp files
-//     you've uploaded to the repo.
-//   - A handful of RW/ST players still point at the old postimg.cc
-//     links because no local upload exists yet for them.
-//   - A few BRAND NEW roster additions (Gabriel Martinelli, Heung Min
-//     Son, Bradley Barcola, Afonso Moreira, Raheem Sterling, Victor
-//     Osimhen, Ferran Torres, Ángel Di María, Anthony Elanga, Savinho,
-//     Jeremie Frimpong, Ivan Perišić, Miguel Almiron, Bryan Mbeumo,
-//     Antony, Tadeo Allende) have NO local image uploaded yet — they
-//     point at a matching images/<name>.webp path that doesn't exist
-//     yet, so their card will show broken until you upload one with
-//     that exact filename.
-//   - Julian Alvarez's old file (images/alvarez.webp) was renamed to
-//     edsonAlvarez.webp for Edson — Julian now points at
-//     images/julianAlvarez.webp, which needs a fresh upload.
-//   - Ferran Torres had no rating in the sheet; using 82 as a
-//     placeholder — tell me the real number and it's a one-line fix.
+//  PLAYER DATA
 // ═══════════════════════════════════════════════
-const PLAYERS=[
+const FOOTBALL_PLAYERS=[
   // ── GK (15) ──
-  {name:"Thibaut Courtois",pos:"GK",rating:89,img:"images/courtois.webp",league:"La Liga"},
-  {name:"Alisson",pos:"GK",rating:89,img:"images/alisson.webp",league:"Prem"},
-  {name:"Marc-Andre ter Stegen",pos:"GK",rating:89,img:"images/terStegen.webp",league:"La Liga"},
-  {name:"Emiliano Martinez",pos:"GK",rating:88,img:"images/emilianoMartinez.webp",league:"Prem"},
-  {name:"Mike Maignan",pos:"GK",rating:88,img:"images/maignan.webp",league:"Serie A"},
-  {name:"Gianluigi Donnarumma",pos:"GK",rating:89,img:"images/donnarumma.webp",league:"Prem"},
-  {name:"Edwin van der Sar",pos:"GK",rating:88,img:"images/vanDerSar.webp",league:"Icon"},
-  {name:"Jordan Pickford",pos:"GK",rating:85,img:"images/pickford.webp",league:"Prem"},
-  {name:"Ederson",pos:"GK",rating:87,img:"images/ederson.webp",league:"Super Lig"},
-  {name:"Yann Sommer",pos:"GK",rating:87,img:"images/sommer.webp",league:"Serie A"},
-  {name:"Guglielmo Vicario",pos:"GK",rating:87,img:"images/vicario.webp",league:"Prem"},
-  {name:"Gianluigi Buffon",pos:"GK",rating:92,img:"images/buffon.webp",league:"Icon"},
-  {name:"Unai Simon",pos:"GK",rating:90,img:"images/unaiSimon.webp",league:"La Liga"},
-  {name:"Diogo Costa",pos:"GK",rating:84,img:"images/diogoCosta.webp",league:"Liga Portugal"},
-  {name:"Manuel Neuer",pos:"GK",rating:86,img:"images/neuer.webp",league:"Bundesliga"},
+  {name:"Thibaut Courtois",pos:"GK",rating:89,img:"footballimages/courtois.webp",league:"La Liga"},
+  {name:"Alisson",pos:"GK",rating:89,img:"footballimages/alisson.webp",league:"Prem"},
+  {name:"Marc-Andre ter Stegen",pos:"GK",rating:89,img:"footballimages/terStegen.webp",league:"La Liga"},
+  {name:"Emiliano Martinez",pos:"GK",rating:88,img:"footballimages/emilianoMartinez.webp",league:"Prem"},
+  {name:"Mike Maignan",pos:"GK",rating:88,img:"footballimages/maignan.webp",league:"Serie A"},
+  {name:"Gianluigi Donnarumma",pos:"GK",rating:89,img:"footballimages/donnarumma.webp",league:"Prem"},
+  {name:"Edwin van der Sar",pos:"GK",rating:88,img:"footballimages/vanDerSar.webp",league:"Icon"},
+  {name:"Jordan Pickford",pos:"GK",rating:85,img:"footballimages/pickford.webp",league:"Prem"},
+  {name:"Ederson",pos:"GK",rating:87,img:"footballimages/ederson.webp",league:"Super Lig"},
+  {name:"Yann Sommer",pos:"GK",rating:87,img:"footballimages/sommer.webp",league:"Serie A"},
+  {name:"Guglielmo Vicario",pos:"GK",rating:87,img:"footballimages/vicario.webp",league:"Prem"},
+  {name:"Gianluigi Buffon",pos:"GK",rating:92,img:"footballimages/buffon.webp",league:"Icon"},
+  {name:"Unai Simon",pos:"GK",rating:90,img:"footballimages/unaiSimon.webp",league:"La Liga"},
+  {name:"Diogo Costa",pos:"GK",rating:84,img:"footballimages/diogoCosta.webp",league:"Liga Portugal"},
+  {name:"Manuel Neuer",pos:"GK",rating:86,img:"footballimages/neuer.webp",league:"Bundesliga"},
 
   // ── CB (15) ──
-  {name:"William Saliba",pos:"CB",rating:90,img:"images/saliba.webp",league:"Prem"},
-  {name:"Antonio Rudiger",pos:"CB",rating:91,img:"images/rudinger.webp",league:"La Liga"},
-  {name:"Ruben Dias",pos:"CB",rating:86,img:"images/rubenDias.webp",league:"Prem"},
-  {name:"Virgil van Dijk",pos:"CB",rating:91,img:"images/vanDijk.webp",league:"Prem"},
-  {name:"Gabriel Magalhaes",pos:"CB",rating:89,img:"images/gabriel.webp",league:"Prem"},
-  {name:"Alessandro Bastoni",pos:"CB",rating:87,img:"images/bastoni.webp",league:"Serie A"},
-  {name:"Nathan Aké",pos:"CB",rating:83,img:"images/ake.webp",league:"Super Lig"},
-  {name:"Eder Militao",pos:"CB",rating:88,img:"images/militao.webp",league:"La Liga"},
-  {name:"John Stones",pos:"CB",rating:82,img:"images/stones.webp",league:"Prem"},
-  {name:"Marquinhos",pos:"CB",rating:88,img:"images/marquinhos.webp",league:"Ligue 1"},
-  {name:"Micky van de Ven",pos:"CB",rating:84,img:"images/vanDeVen.webp",league:"Prem"},
-  {name:"Paolo Maldini",pos:"CB",rating:94,img:"images/maldini.webp",league:"Icon"},
-  {name:"Nico Schlotterbeck",pos:"CB",rating:85,img:"images/schlotterbeck.webp",league:"Bundesliga"},
-  {name:"Pau Cubarsi",pos:"CB",rating:85,img:"images/cubarsi.webp",league:"Prem"},
-  {name:"Cristian Romero",pos:"CB",rating:86,img:"images/romero.webp",league:"Prem"},
+  {name:"William Saliba",pos:"CB",rating:90,img:"footballimages/saliba.webp",league:"Prem"},
+  {name:"Antonio Rudiger",pos:"CB",rating:91,img:"footballimages/rudinger.webp",league:"La Liga"},
+  {name:"Ruben Dias",pos:"CB",rating:86,img:"footballimages/rubenDias.webp",league:"Prem"},
+  {name:"Virgil van Dijk",pos:"CB",rating:91,img:"footballimages/vanDijk.webp",league:"Prem"},
+  {name:"Gabriel Magalhaes",pos:"CB",rating:89,img:"footballimages/gabriel.webp",league:"Prem"},
+  {name:"Alessandro Bastoni",pos:"CB",rating:87,img:"footballimages/bastoni.webp",league:"Serie A"},
+  {name:"Nathan Aké",pos:"CB",rating:83,img:"footballimages/ake.webp",league:"Super Lig"},
+  {name:"Eder Militao",pos:"CB",rating:88,img:"footballimages/militao.webp",league:"La Liga"},
+  {name:"John Stones",pos:"CB",rating:82,img:"footballimages/stones.webp",league:"Prem"},
+  {name:"Marquinhos",pos:"CB",rating:88,img:"footballimages/marquinhos.webp",league:"Ligue 1"},
+  {name:"Micky van de Ven",pos:"CB",rating:84,img:"footballimages/vanDeVen.webp",league:"Prem"},
+  {name:"Paolo Maldini",pos:"CB",rating:94,img:"footballimages/maldini.webp",league:"Icon"},
+  {name:"Nico Schlotterbeck",pos:"CB",rating:85,img:"footballimages/schlotterbeck.webp",league:"Bundesliga"},
+  {name:"Pau Cubarsi",pos:"CB",rating:85,img:"footballimages/cubarsi.webp",league:"Prem"},
+  {name:"Cristian Romero",pos:"CB",rating:86,img:"footballimages/romero.webp",league:"Prem"},
 
   // ── LB (15) ──
-  {name:"Alphonso Davies",pos:"LB",rating:89,img:"images/davies.webp",league:"Bundesliga"},
-  {name:"Theo Hernandez",pos:"LB",rating:88,img:"images/hernandez.webp",league:"Serie A"},
-  {name:"Josko Gvardiol",pos:"LB",rating:84,img:"images/gvardiol.webp",league:"Prem"},
-  {name:"Andrew Robertson",pos:"LB",rating:86,img:"images/robertson.webp",league:"Prem"},
-  {name:"Nuno Mendes",pos:"LB",rating:86,img:"images/nunoMendes.webp",league:"Ligue 1"},
-  {name:"Federico Dimarco",pos:"LB",rating:87,img:"images/dimarco.webp",league:"Serie A"},
-  {name:"Destiny Udogie",pos:"LB",rating:80,img:"images/udogie.webp",league:"Prem"},
-  {name:"Ferland Mendy",pos:"LB",rating:87,img:"images/mendy.webp",league:"La Liga"},
-  {name:"Pervis Estupiñán",pos:"LB",rating:87,img:"images/esstupinan.webp",league:"Prem"},
-  {name:"Luke Shaw",pos:"LB",rating:79,img:"images/shaw.webp",league:"Prem"},
-  {name:"Oleksandr Zinchenko",pos:"LB",rating:77,img:"images/zinchenko.webp",league:"Eredivisie"},
-  {name:"Antonee Robinson",pos:"LB",rating:82,img:"images/robinson.webp",league:"Prem"},
-  {name:"Miguel Gutierrez",pos:"LB",rating:81,img:"images/gutierrez.webp",league:"La Liga"},
-  {name:"Marc Cucurella",pos:"LB",rating:84,img:"images/cucurella.webp",league:"La Liga"},
-  {name:"Roberto Carlos",pos:"LB",rating:91,img:"images/robertoCarlos.webp",league:"Icon"},
+  {name:"Alphonso Davies",pos:"LB",rating:89,img:"footballimages/davies.webp",league:"Bundesliga"},
+  {name:"Theo Hernandez",pos:"LB",rating:88,img:"footballimages/hernandez.webp",league:"Serie A"},
+  {name:"Josko Gvardiol",pos:"LB",rating:84,img:"footballimages/gvardiol.webp",league:"Prem"},
+  {name:"Andrew Robertson",pos:"LB",rating:86,img:"footballimages/robertson.webp",league:"Prem"},
+  {name:"Nuno Mendes",pos:"LB",rating:86,img:"footballimages/nunoMendes.webp",league:"Ligue 1"},
+  {name:"Federico Dimarco",pos:"LB",rating:87,img:"footballimages/dimarco.webp",league:"Serie A"},
+  {name:"Destiny Udogie",pos:"LB",rating:80,img:"footballimages/udogie.webp",league:"Prem"},
+  {name:"Ferland Mendy",pos:"LB",rating:87,img:"footballimages/mendy.webp",league:"La Liga"},
+  {name:"Pervis Estupiñán",pos:"LB",rating:87,img:"footballimages/esstupinan.webp",league:"Prem"},
+  {name:"Luke Shaw",pos:"LB",rating:79,img:"footballimages/shaw.webp",league:"Prem"},
+  {name:"Oleksandr Zinchenko",pos:"LB",rating:77,img:"footballimages/zinchenko.webp",league:"Eredivisie"},
+  {name:"Antonee Robinson",pos:"LB",rating:82,img:"footballimages/robinson.webp",league:"Prem"},
+  {name:"Miguel Gutierrez",pos:"LB",rating:81,img:"footballimages/gutierrez.webp",league:"La Liga"},
+  {name:"Marc Cucurella",pos:"LB",rating:84,img:"footballimages/cucurella.webp",league:"La Liga"},
+  {name:"Roberto Carlos",pos:"LB",rating:91,img:"footballimages/robertoCarlos.webp",league:"Icon"},
 
   // ── RB (15) ──
-  {name:"Trent Alexander-Arnold",pos:"RB",rating:87,img:"images/alexander-arnold.webp",league:"Prem"},
-  {name:"Achraf Hakimi",pos:"RB",rating:89,img:"images/hakimi.webp",league:"Ligue 1"},
-  {name:"Dani Carvajal",pos:"RB",rating:89,img:"images/carvajal.webp",league:"La Liga"},
-  {name:"Kyle Walker",pos:"RB",rating:89,img:"images/walker.webp",league:"Prem"},
-  {name:"Jules Kounde",pos:"RB",rating:88,img:"images/kounde.webp",league:"La Liga"},
-  {name:"Konrad Laimer",pos:"RB",rating:82,img:"images/laimer.webp",league:"Bundesliga"},
-  {name:"Ben White",pos:"RB",rating:83,img:"images/benWhite.webp",league:"Prem"},
-  {name:"Pedro Porro",pos:"RB",rating:82,img:"images/porro.webp",league:"Prem"},
-  {name:"Kieran Trippier",pos:"RB",rating:80,img:"images/trippier.webp",league:"Prem"},
-  {name:"Reece James",pos:"RB",rating:85,img:"images/rJames.webp",league:"Prem"},
-  {name:"Diogo Dalot",pos:"RB",rating:87,img:"images/dalot.webp",league:"Prem"},
-  {name:"Nahuel Molina",pos:"RB",rating:87,img:"images/molina.webp",league:"La Liga"},
-  {name:"Denzel Dumfries",pos:"RB",rating:86,img:"images/dumfries.webp",league:"Serie A"},
-  {name:"João Cancelo",pos:"RB",rating:87,img:"images/cancelo.webp",league:"Saudi Pro"},
-  {name:"Cafu",pos:"RB",rating:91,img:"images/cafu.webp",league:"Icon"},
+  {name:"Trent Alexander-Arnold",pos:"RB",rating:87,img:"footballimages/alexander-arnold.webp",league:"Prem"},
+  {name:"Achraf Hakimi",pos:"RB",rating:89,img:"footballimages/hakimi.webp",league:"Ligue 1"},
+  {name:"Dani Carvajal",pos:"RB",rating:89,img:"footballimages/carvajal.webp",league:"La Liga"},
+  {name:"Kyle Walker",pos:"RB",rating:89,img:"footballimages/walker.webp",league:"Prem"},
+  {name:"Jules Kounde",pos:"RB",rating:88,img:"footballimages/kounde.webp",league:"La Liga"},
+  {name:"Konrad Laimer",pos:"RB",rating:82,img:"footballimages/laimer.webp",league:"Bundesliga"},
+  {name:"Ben White",pos:"RB",rating:83,img:"footballimages/benWhite.webp",league:"Prem"},
+  {name:"Pedro Porro",pos:"RB",rating:82,img:"footballimages/porro.webp",league:"Prem"},
+  {name:"Kieran Trippier",pos:"RB",rating:80,img:"footballimages/trippier.webp",league:"Prem"},
+  {name:"Reece James",pos:"RB",rating:85,img:"footballimages/rJames.webp",league:"Prem"},
+  {name:"Diogo Dalot",pos:"RB",rating:87,img:"footballimages/dalot.webp",league:"Prem"},
+  {name:"Nahuel Molina",pos:"RB",rating:87,img:"footballimages/molina.webp",league:"La Liga"},
+  {name:"Denzel Dumfries",pos:"RB",rating:86,img:"footballimages/dumfries.webp",league:"Serie A"},
+  {name:"João Cancelo",pos:"RB",rating:87,img:"footballimages/cancelo.webp",league:"Saudi Pro"},
+  {name:"Cafu",pos:"RB",rating:91,img:"footballimages/cafu.webp",league:"Icon"},
 
   // ── CDM (15) ──
-  {name:"Rodri",pos:"CDM",rating:91,img:"images/rodri.webp",league:"Prem"},
-  {name:"Declan Rice",pos:"CDM",rating:91,img:"images/rice.webp",league:"Prem"},
-  {name:"N'Golo Kanté",pos:"CDM",rating:92,img:"images/kante.webp",league:"Super Lig"},
-  {name:"Aurelien Tchouameni",pos:"CDM",rating:86,img:"images/tchouameni.webp",league:"La Liga"},
-  {name:"Joshua Kimmich",pos:"CDM",rating:90,img:"images/kimmich.webp",league:"Bundesliga"},
-  {name:"Casemiro",pos:"CDM",rating:91,img:"images/casemiro.webp",league:"Prem"},
-  {name:"Joao Palhinha",pos:"CDM",rating:83,img:"images/palhinha.webp",league:"Prem"},
-  {name:"Manuel Ugarte",pos:"CDM",rating:79,img:"images/ugarte.webp",league:"Prem"},
-  {name:"Warren Zaire-Emery",pos:"CDM",rating:80,img:"images/zaireEmery.webp",league:"Ligue 1"},
-  {name:"Hakan Calhanoglu",pos:"CDM",rating:87,img:"images/calhanoglu.webp",league:"Serie A"},
-  {name:"Claude Makélélé",pos:"CDM",rating:87,img:"images/makelele.webp",league:"Icon"},
-  {name:"Granit Xhaka",pos:"CDM",rating:89,img:"images/xhaka.webp",league:"Bundesliga"},
-  {name:"Amadou Onana",pos:"CDM",rating:79,img:"images/onana.webp",league:"Prem"},
-  {name:"Edson Alvarez",pos:"CDM",rating:86,img:"images/edsonAlvarez.webp",league:"Prem"},
-  {name:"Douglas Luiz",pos:"CDM",rating:90,img:"images/douglasLuiz.webp",league:"Serie A"},
+  {name:"Rodri",pos:"CDM",rating:91,img:"footballimages/rodri.webp",league:"Prem"},
+  {name:"Declan Rice",pos:"CDM",rating:91,img:"footballimages/rice.webp",league:"Prem"},
+  {name:"N'Golo Kanté",pos:"CDM",rating:92,img:"footballimages/kante.webp",league:"Super Lig"},
+  {name:"Aurelien Tchouameni",pos:"CDM",rating:86,img:"footballimages/tchouameni.webp",league:"La Liga"},
+  {name:"Joshua Kimmich",pos:"CDM",rating:90,img:"footballimages/kimmich.webp",league:"Bundesliga"},
+  {name:"Casemiro",pos:"CDM",rating:91,img:"footballimages/casemiro.webp",league:"Prem"},
+  {name:"Joao Palhinha",pos:"CDM",rating:83,img:"footballimages/palhinha.webp",league:"Prem"},
+  {name:"Manuel Ugarte",pos:"CDM",rating:79,img:"footballimages/ugarte.webp",league:"Prem"},
+  {name:"Warren Zaire-Emery",pos:"CDM",rating:80,img:"footballimages/zaireEmery.webp",league:"Ligue 1"},
+  {name:"Hakan Calhanoglu",pos:"CDM",rating:87,img:"footballimages/calhanoglu.webp",league:"Serie A"},
+  {name:"Claude Makélélé",pos:"CDM",rating:87,img:"footballimages/makelele.webp",league:"Icon"},
+  {name:"Granit Xhaka",pos:"CDM",rating:89,img:"footballimages/xhaka.webp",league:"Bundesliga"},
+  {name:"Amadou Onana",pos:"CDM",rating:79,img:"footballimages/onana.webp",league:"Prem"},
+  {name:"Edson Alvarez",pos:"CDM",rating:86,img:"footballimages/edsonAlvarez.webp",league:"Prem"},
+  {name:"Douglas Luiz",pos:"CDM",rating:90,img:"footballimages/douglasLuiz.webp",league:"Serie A"},
 
   // ── CM (15) ──
-  {name:"Federico Valverde",pos:"CM",rating:89,img:"images/valverde.webp",league:"La Liga"},
-  {name:"Vitinha",pos:"CM",rating:90,img:"images/vitinha.webp",league:"Ligue 1"},
-  {name:"Alexis Mac Allister",pos:"CM",rating:89,img:"images/macAllister.webp",league:"Prem"},
-  {name:"Bruno Guimarães",pos:"CM",rating:89,img:"images/guimaraes.webp",league:"Prem"},
-  {name:"Pedri",pos:"CM",rating:90,img:"images/pedri.webp",league:"La Liga"},
-  {name:"Luka Modric",pos:"CM",rating:89,img:"images/modric.webp",league:"La Liga"},
-  {name:"Pape Gueye",pos:"CM",rating:85,img:"images/gueye.webp",league:"La Liga"},
-  {name:"Toni Kroos",pos:"CM",rating:90,img:"images/kroos.webp",league:"Icon"},
-  {name:"Enzo Fernandez",pos:"CM",rating:91,img:"images/fernandez.webp",league:"Prem"},
-  {name:"Frenkie de Jong",pos:"CM",rating:89,img:"images/deJong.webp",league:"La Liga"},
-  {name:"Bernardo Silva",pos:"CM",rating:87,img:"images/silva.webp",league:"Prem"},
-  {name:"Xavi",pos:"CM",rating:90,img:"images/xavi.webp",league:"La Liga"},
-  {name:"Eduardo Camavinga",pos:"CM",rating:87,img:"images/camavinga.webp",league:"La Liga"},
-  {name:"Paul Pogba",pos:"CM",rating:89,img:"images/pogba.webp",league:"Ligue 1"},
-  {name:"Mateo Kovacic",pos:"CM",rating:83,img:"images/kovacic.webp",league:"Prem"},
+  {name:"Federico Valverde",pos:"CM",rating:89,img:"footballimages/valverde.webp",league:"La Liga"},
+  {name:"Vitinha",pos:"CM",rating:90,img:"footballimages/vitinha.webp",league:"Ligue 1"},
+  {name:"Alexis Mac Allister",pos:"CM",rating:89,img:"footballimages/macAllister.webp",league:"Prem"},
+  {name:"Bruno Guimarães",pos:"CM",rating:89,img:"footballimages/guimaraes.webp",league:"Prem"},
+  {name:"Pedri",pos:"CM",rating:90,img:"footballimages/pedri.webp",league:"La Liga"},
+  {name:"Luka Modric",pos:"CM",rating:89,img:"footballimages/modric.webp",league:"La Liga"},
+  {name:"Pape Gueye",pos:"CM",rating:85,img:"footballimages/gueye.webp",league:"La Liga"},
+  {name:"Toni Kroos",pos:"CM",rating:90,img:"footballimages/kroos.webp",league:"Icon"},
+  {name:"Enzo Fernandez",pos:"CM",rating:91,img:"footballimages/fernandez.webp",league:"Prem"},
+  {name:"Frenkie de Jong",pos:"CM",rating:89,img:"footballimages/deJong.webp",league:"La Liga"},
+  {name:"Bernardo Silva",pos:"CM",rating:87,img:"footballimages/silva.webp",league:"Prem"},
+  {name:"Xavi",pos:"CM",rating:90,img:"footballimages/xavi.webp",league:"La Liga"},
+  {name:"Eduardo Camavinga",pos:"CM",rating:87,img:"footballimages/camavinga.webp",league:"La Liga"},
+  {name:"Paul Pogba",pos:"CM",rating:89,img:"footballimages/pogba.webp",league:"Ligue 1"},
+  {name:"Mateo Kovacic",pos:"CM",rating:83,img:"footballimages/kovacic.webp",league:"Prem"},
 
   // ── CAM (15) ──
-  {name:"Jude Bellingham",pos:"CAM",rating:92,img:"images/bellingham.webp",league:"La Liga"},
-  {name:"Jamal Musiala",pos:"CAM",rating:89,img:"images/musiala.webp",league:"Bundesliga"},
-  {name:"Florian Wirtz",pos:"CAM",rating:89,img:"images/wirtz.webp",league:"Bundesliga"},
-  {name:"Kevin De Bruyne",pos:"CAM",rating:89,img:"images/deBruyne.webp",league:"Serie A"},
-  {name:"Mario Götze",pos:"CAM",rating:88,img:"images/gotze.webp",league:"Bundesliga"},
-  {name:"Cole Palmer",pos:"CAM",rating:88,img:"images/palmer.webp",league:"Prem"},
-  {name:"Eberechi Eze",pos:"CAM",rating:86,img:"images/eze.webp",league:"Prem"},
-  {name:"Xavi Simons",pos:"CAM",rating:88,img:"images/simons.webp",league:"Bundesliga"},
-  {name:"Bruno Fernandes",pos:"CAM",rating:88,img:"images/brunoFernandes.webp",league:"Prem"},
-  {name:"Julian Brandt",pos:"CAM",rating:83,img:"images/brandt.webp",league:"Bundesliga"},
-  {name:"Diego Armando Maradona",pos:"CAM",rating:96,img:"images/maradona.webp",league:"Icon"},
-  {name:"Dominik Szoboszlai",pos:"CAM",rating:87,img:"images/szoboszlai.webp",league:"Prem"},
-  {name:"Dani Olmo",pos:"CAM",rating:89,img:"images/olmo.webp",league:"La Liga"},
-  {name:"Pele",pos:"CAM",rating:96,img:"images/pele.webp",league:"Icon"},
-  {name:"Lorenzo Pellegrini",pos:"CAM",rating:83,img:"images/pellegrini.webp",league:"Serie A"},
+  {name:"Jude Bellingham",pos:"CAM",rating:92,img:"footballimages/bellingham.webp",league:"La Liga"},
+  {name:"Jamal Musiala",pos:"CAM",rating:89,img:"footballimages/musiala.webp",league:"Bundesliga"},
+  {name:"Florian Wirtz",pos:"CAM",rating:89,img:"footballimages/wirtz.webp",league:"Bundesliga"},
+  {name:"Kevin De Bruyne",pos:"CAM",rating:89,img:"footballimages/deBruyne.webp",league:"Serie A"},
+  {name:"Mario Götze",pos:"CAM",rating:88,img:"footballimages/gotze.webp",league:"Bundesliga"},
+  {name:"Cole Palmer",pos:"CAM",rating:88,img:"footballimages/palmer.webp",league:"Prem"},
+  {name:"Eberechi Eze",pos:"CAM",rating:86,img:"footballimages/eze.webp",league:"Prem"},
+  {name:"Xavi Simons",pos:"CAM",rating:88,img:"footballimages/simons.webp",league:"Bundesliga"},
+  {name:"Bruno Fernandes",pos:"CAM",rating:88,img:"footballimages/brunoFernandes.webp",league:"Prem"},
+  {name:"Julian Brandt",pos:"CAM",rating:83,img:"footballimages/brandt.webp",league:"Bundesliga"},
+  {name:"Diego Armando Maradona",pos:"CAM",rating:96,img:"footballimages/maradona.webp",league:"Icon"},
+  {name:"Dominik Szoboszlai",pos:"CAM",rating:87,img:"footballimages/szoboszlai.webp",league:"Prem"},
+  {name:"Dani Olmo",pos:"CAM",rating:89,img:"footballimages/olmo.webp",league:"La Liga"},
+  {name:"Pele",pos:"CAM",rating:96,img:"footballimages/pele.webp",league:"Icon"},
+  {name:"Lorenzo Pellegrini",pos:"CAM",rating:83,img:"footballimages/pellegrini.webp",league:"Serie A"},
 
   // ── LM (15) ──
-  {name:"Kingsley Coman",pos:"LM",rating:87,img:"images/coman.webp",league:"Bundesliga"},
-  {name:"Luis Diaz",pos:"LM",rating:87,img:"images/luisDiaz.webp",league:"Prem"},
-  {name:"Marcus Rashford",pos:"LM",rating:90,img:"images/rashford.webp",league:"Prem"},
-  {name:"Federico Chiesa",pos:"LM",rating:81,img:"images/chiesa.webp",league:"Prem"},
-  {name:"Sadio Mane",pos:"LM",rating:88,img:"images/mane.webp",league:"Saudi Pro"},
-  {name:"Alejandro Grimaldo",pos:"LM",rating:86,img:"images/grimaldo.webp",league:"Bundesliga"},
-  {name:"Matheus Cunha",pos:"LM",rating:87,img:"images/cunha.webp",league:"Prem"},
-  {name:"Serge Gnabry",pos:"LM",rating:87,img:"images/gnabry.webp",league:"Bundesliga"},
-  {name:"Cody Gakpo",pos:"LM",rating:89,img:"images/gakpo.webp",league:"Prem"},
-  {name:"Filip Kostic",pos:"LM",rating:88,img:"images/kostic.webp",league:"Serie A"},
-  {name:"Robert Pirès",pos:"LM",rating:89,img:"images/pires.webp",league:"Icon"},
-  {name:"Yan Diomande",pos:"LM",rating:82,img:"images/diomande.webp",league:"Bundesliga"},
-  {name:"Kaoru Mitoma",pos:"LM",rating:87,img:"images/mitoma.webp",league:"Prem"},
-  {name:"Stephan El Shaarawy",pos:"LM",rating:78,img:"images/elShaarawy.webp",league:"Serie A"},
-  {name:"Galeno",pos:"LM",rating:86,img:"images/galeno.webp",league:"Liga Portugal"},
+  {name:"Kingsley Coman",pos:"LM",rating:87,img:"footballimages/coman.webp",league:"Bundesliga"},
+  {name:"Luis Diaz",pos:"LM",rating:87,img:"footballimages/luisDiaz.webp",league:"Prem"},
+  {name:"Marcus Rashford",pos:"LM",rating:90,img:"footballimages/rashford.webp",league:"Prem"},
+  {name:"Federico Chiesa",pos:"LM",rating:81,img:"footballimages/chiesa.webp",league:"Prem"},
+  {name:"Sadio Mane",pos:"LM",rating:88,img:"footballimages/mane.webp",league:"Saudi Pro"},
+  {name:"Alejandro Grimaldo",pos:"LM",rating:86,img:"footballimages/grimaldo.webp",league:"Bundesliga"},
+  {name:"Matheus Cunha",pos:"LM",rating:87,img:"footballimages/cunha.webp",league:"Prem"},
+  {name:"Serge Gnabry",pos:"LM",rating:87,img:"footballimages/gnabry.webp",league:"Bundesliga"},
+  {name:"Cody Gakpo",pos:"LM",rating:89,img:"footballimages/gakpo.webp",league:"Prem"},
+  {name:"Filip Kostic",pos:"LM",rating:88,img:"footballimages/kostic.webp",league:"Serie A"},
+  {name:"Robert Pirès",pos:"LM",rating:89,img:"footballimages/pires.webp",league:"Icon"},
+  {name:"Yan Diomande",pos:"LM",rating:82,img:"footballimages/diomande.webp",league:"Bundesliga"},
+  {name:"Kaoru Mitoma",pos:"LM",rating:87,img:"footballimages/mitoma.webp",league:"Prem"},
+  {name:"Stephan El Shaarawy",pos:"LM",rating:78,img:"footballimages/elShaarawy.webp",league:"Serie A"},
+  {name:"Galeno",pos:"LM",rating:86,img:"footballimages/galeno.webp",league:"Liga Portugal"},
 
   // ── RM (15) ──
-  {name:"Leroy Sane",pos:"RM",rating:84,img:"images/sane.webp",league:"Super Lig"},
-  {name:"Moussa Diaby",pos:"RM",rating:84,img:"images/diaby.webp",league:"Saudi Pro"},
-  {name:"Mohamed Salah",pos:"RM",rating:92,img:"images/salah.webp",league:"Prem"},
-  {name:"Michael Olise",pos:"RM",rating:87,img:"images/olise.webp",league:"Bundesliga"},
-  {name:"Pedro Neto",pos:"RM",rating:88,img:"images/neto.webp",league:"Prem"},
-  {name:"Iñaki Williams",pos:"RM",rating:87,img:"images/inakiWilliams.webp",league:"La Liga"},
-  {name:"Jordan Ayew",pos:"RM",rating:85,img:"images/ayew.webp",league:"Prem"},
-  {name:"Jarrod Bowen",pos:"RM",rating:83,img:"images/bowen.webp",league:"Prem"},
-  {name:"David Beckham",pos:"RM",rating:89,img:"images/beckham.webp",league:"Icon"},
-  {name:"Rayan Cherki",pos:"RM",rating:85,img:"images/cherki.webp",league:"Prem"},
-  {name:"Takefusa Kubo",pos:"RM",rating:82,img:"images/kubo.webp",league:"La Liga"},
-  {name:"Antoine Semenyo",pos:"RM",rating:88,img:"images/semenyo.webp",league:"Prem"},
-  {name:"Brahim Diaz",pos:"RM",rating:90,img:"images/brahim.webp",league:"La Liga"},
-  {name:"Viktor Tsygankov",pos:"RM",rating:84,img:"images/tsygankov.webp",league:"La Liga"},
-  {name:"Yeremy Pino",pos:"RM",rating:80,img:"images/pino.webp",league:"La Liga"},
+  {name:"Leroy Sane",pos:"RM",rating:84,img:"footballimages/sane.webp",league:"Super Lig"},
+  {name:"Moussa Diaby",pos:"RM",rating:84,img:"footballimages/diaby.webp",league:"Saudi Pro"},
+  {name:"Mohamed Salah",pos:"RM",rating:92,img:"footballimages/salah.webp",league:"Prem"},
+  {name:"Michael Olise",pos:"RM",rating:87,img:"footballimages/olise.webp",league:"Bundesliga"},
+  {name:"Pedro Neto",pos:"RM",rating:88,img:"footballimages/neto.webp",league:"Prem"},
+  {name:"Iñaki Williams",pos:"RM",rating:87,img:"footballimages/inakiWilliams.webp",league:"La Liga"},
+  {name:"Jordan Ayew",pos:"RM",rating:85,img:"footballimages/ayew.webp",league:"Prem"},
+  {name:"Jarrod Bowen",pos:"RM",rating:83,img:"footballimages/bowen.webp",league:"Prem"},
+  {name:"David Beckham",pos:"RM",rating:89,img:"footballimages/beckham.webp",league:"Icon"},
+  {name:"Rayan Cherki",pos:"RM",rating:85,img:"footballimages/cherki.webp",league:"Prem"},
+  {name:"Takefusa Kubo",pos:"RM",rating:82,img:"footballimages/kubo.webp",league:"La Liga"},
+  {name:"Antoine Semenyo",pos:"RM",rating:88,img:"footballimages/semenyo.webp",league:"Prem"},
+  {name:"Brahim Diaz",pos:"RM",rating:90,img:"footballimages/brahim.webp",league:"La Liga"},
+  {name:"Viktor Tsygankov",pos:"RM",rating:84,img:"footballimages/tsygankov.webp",league:"La Liga"},
+  {name:"Yeremy Pino",pos:"RM",rating:80,img:"footballimages/pino.webp",league:"La Liga"},
 
   // ── LW (15) ──
-  {name:"Gabriel Martinelli",pos:"LW",rating:87,img:"images/martinelli.webp",league:"Prem"},
-  {name:"Vinicius Jr",pos:"LW",rating:92,img:"images/vini.webp",league:"La Liga"},
-  {name:"Nico Williams",pos:"LW",rating:92,img:"images/nicoWilliams.webp",league:"La Liga"},
-  {name:"Rafael Leao",pos:"LW",rating:87,img:"images/rafaelLeao.webp",league:"Serie A"},
-  {name:"Ferran Torres",pos:"LW",rating:86,img:"images/torres.webp",league:"Ligue 1"},
-  {name:"Jeremy Doku",pos:"LW",rating:86,img:"images/doku.webp",league:"Prem"},
-  {name:"Anthony Gordon",pos:"LW",rating:88,img:"images/gordon.webp",league:"Prem"},
-  {name:"Heung Min Son",pos:"LW",rating:88,img:"images/son.webp",league:"MLS"},
-  {name:"Jack Grealish",pos:"LW",rating:87,img:"images/grealish.webp",league:"Prem"},
-  {name:"Bradley Barcola",pos:"LW",rating:87,img:"images/barcola.webp",league:"Ligue 1"},
-  {name:"Raphinia",pos:"LW",rating:91,img:"images/raphinha.webp",league:"La Liga"},
-  {name:"Ronaldinho",pos:"LW",rating:94,img:"images/ronaldinho.webp",league:"Icon"},
-  {name:"Alejandro Garnacho",pos:"LW",rating:89,img:"images/garnacho.webp",league:"Prem"},
-  {name:"Afonso Moreira",pos:"LW",rating:84,img:"images/moreira.webp",league:"Ligue 1"},
-  {name:"Raheem Sterling",pos:"LW",rating:89,img:"images/sterling.webp",league:"Eredivisie"},
+  {name:"Gabriel Martinelli",pos:"LW",rating:87,img:"footballimages/martinelli.webp",league:"Prem"},
+  {name:"Vinicius Jr",pos:"LW",rating:92,img:"footballimages/vini.webp",league:"La Liga"},
+  {name:"Nico Williams",pos:"LW",rating:92,img:"footballimages/nicoWilliams.webp",league:"La Liga"},
+  {name:"Rafael Leao",pos:"LW",rating:87,img:"footballimages/rafaelLeao.webp",league:"Serie A"},
+  {name:"Ferran Torres",pos:"LW",rating:86,img:"footballimages/torres.webp",league:"Ligue 1"},
+  {name:"Jeremy Doku",pos:"LW",rating:86,img:"footballimages/doku.webp",league:"Prem"},
+  {name:"Anthony Gordon",pos:"LW",rating:88,img:"footballimages/gordon.webp",league:"Prem"},
+  {name:"Heung Min Son",pos:"LW",rating:88,img:"footballimages/son.webp",league:"MLS"},
+  {name:"Jack Grealish",pos:"LW",rating:87,img:"footballimages/grealish.webp",league:"Prem"},
+  {name:"Bradley Barcola",pos:"LW",rating:87,img:"footballimages/barcola.webp",league:"Ligue 1"},
+  {name:"Raphinia",pos:"LW",rating:91,img:"footballimages/raphinha.webp",league:"La Liga"},
+  {name:"Ronaldinho",pos:"LW",rating:94,img:"footballimages/ronaldinho.webp",league:"Icon"},
+  {name:"Alejandro Garnacho",pos:"LW",rating:89,img:"footballimages/garnacho.webp",league:"Prem"},
+  {name:"Afonso Moreira",pos:"LW",rating:84,img:"footballimages/moreira.webp",league:"Ligue 1"},
+  {name:"Raheem Sterling",pos:"LW",rating:89,img:"footballimages/sterling.webp",league:"Eredivisie"},
 
   // ── RW (15) ──
-  {name:"Lamine Yamal",pos:"RW",rating:92,img:"images/yamal.webp",league:"La Liga"},
-  {name:"Ángel Di María",pos:"RW",rating:87,img:"images/diMaria.webp",league:"Liga Profesional"},
-  {name:"Rodrygo",pos:"RW",rating:88,img:"images/rodrygo.webp",league:"La Liga"},
-  {name:"Anthony Elanga",pos:"RW",rating:88,img:"images/elanga.webp",league:"Prem"},
-  {name:"Savinho",pos:"RW",rating:87,img:"images/savinho.webp",league:"Prem"},
-  {name:"Ousmane Dembele",pos:"RW",rating:90,img:"images/dembele.webp",league:"Ligue 1"},
-  {name:"Phil Foden",pos:"RW",rating:86,img:"images/foden.webp",league:"Prem"},
-  {name:"Jeremie Frimpong",pos:"RW",rating:86,img:"images/frimpong.webp",league:"Prem"},
-  {name:"Ivan Perišić",pos:"RW",rating:87,img:"images/perisic.webp",league:"Eredivisie"},
-  {name:"Désiré Doué",pos:"RW",rating:76,img:"images/almiron.webp",league:"Ligue 1"},
-  {name:"Garrincha",pos:"RW",rating:93,img:"images/garrincha.webp",league:"Icon"},
-  {name:"Bryan Mbeumo",pos:"RW",rating:86,img:"images/mbeumo.webp",league:"Prem"},
-  {name:"Antony",pos:"RW",rating:86,img:"images/antony.webp",league:"La Liga"},
-  {name:"Marco Asensio",pos:"RW",rating:85,img:"images/asensio.webp",league:"Super Lig"},
-  {name:"Bukayo Saka",pos:"RW",rating:90,img:"images/saka.webp",league:"Prem"},
+  {name:"Lamine Yamal",pos:"RW",rating:92,img:"footballimages/yamal.webp",league:"La Liga"},
+  {name:"Ángel Di María",pos:"RW",rating:87,img:"footballimages/diMaria.webp",league:"Liga Profesional"},
+  {name:"Rodrygo",pos:"RW",rating:88,img:"footballimages/rodrygo.webp",league:"La Liga"},
+  {name:"Anthony Elanga",pos:"RW",rating:88,img:"footballimages/elanga.webp",league:"Prem"},
+  {name:"Savinho",pos:"RW",rating:87,img:"footballimages/savinho.webp",league:"Prem"},
+  {name:"Ousmane Dembele",pos:"RW",rating:90,img:"footballimages/dembele.webp",league:"Ligue 1"},
+  {name:"Phil Foden",pos:"RW",rating:86,img:"footballimages/foden.webp",league:"Prem"},
+  {name:"Jeremie Frimpong",pos:"RW",rating:86,img:"footballimages/frimpong.webp",league:"Prem"},
+  {name:"Ivan Perišić",pos:"RW",rating:87,img:"footballimages/perisic.webp",league:"Eredivisie"},
+  {name:"Désiré Doué",pos:"RW",rating:76,img:"footballimages/almiron.webp",league:"Ligue 1"},
+  {name:"Garrincha",pos:"RW",rating:93,img:"footballimages/garrincha.webp",league:"Icon"},
+  {name:"Bryan Mbeumo",pos:"RW",rating:86,img:"footballimages/mbeumo.webp",league:"Prem"},
+  {name:"Antony",pos:"RW",rating:86,img:"footballimages/antony.webp",league:"La Liga"},
+  {name:"Marco Asensio",pos:"RW",rating:85,img:"footballimages/asensio.webp",league:"Super Lig"},
+  {name:"Bukayo Saka",pos:"RW",rating:90,img:"footballimages/saka.webp",league:"Prem"},
 
   // ── ST (15) ──
-  {name:"Kylian Mbappe",pos:"ST",rating:92,img:"images/mbappe.webp",league:"La Liga"},
-  {name:"Erling Haaland",pos:"ST",rating:92,img:"images/haaland.webp",league:"Prem"},
-  {name:"Harry Kane",pos:"ST",rating:90,img:"images/kane.webp",league:"Bundesliga"},
-  {name:"Robert Lewandowski",pos:"ST",rating:88,img:"images/lewandowski.webp",league:"La Liga"},
-  {name:"Lautaro Martinez",pos:"ST",rating:89,img:"images/lautaroMartinez.webp",league:"Serie A"},
-  {name:"Julian Alvarez",pos:"ST",rating:89,img:"images/alvarez.webp",league:"La Liga"},
-  {name:"Victor Osimhen",pos:"ST",rating:88,img:"images/osimhen.webp",league:"Super Lig"},
-  {name:"Alexander Isak",pos:"ST",rating:89,img:"images/isak.webp",league:"Prem"},
-  {name:"Ollie Watkins",pos:"ST",rating:86,img:"images/watkins.webp",league:"Prem"},
-  {name:"Lionel Messi",pos:"ST",rating:90,img:"images/messi.webp",league:"MLS"},
-  {name:"Cristiano Ronaldo",pos:"ST",rating:90,img:"images/cristianoRonaldo.webp",league:"Prem"},
-  {name:"Ronaldo",pos:"ST",rating:94,img:"images/ronaldo.webp",league:"Icon"},
-  {name:"Karim Benzema",pos:"ST",rating:87,img:"images/benzema.webp",league:"Saudi Pro"},
-  {name:"Zlatan Ibrahimovic",pos:"ST",rating:95,img:"images/ibrahimovic.webp",league:"Icon"},
-  {name:"Viktor Gyokeres",pos:"ST",rating:87,img:"images/gyokeres.webp",league:"Prem"},
+  {name:"Kylian Mbappe",pos:"ST",rating:92,img:"footballimages/mbappe.webp",league:"La Liga"},
+  {name:"Erling Haaland",pos:"ST",rating:92,img:"footballimages/haaland.webp",league:"Prem"},
+  {name:"Harry Kane",pos:"ST",rating:90,img:"footballimages/kane.webp",league:"Bundesliga"},
+  {name:"Robert Lewandowski",pos:"ST",rating:88,img:"footballimages/lewandowski.webp",league:"La Liga"},
+  {name:"Lautaro Martinez",pos:"ST",rating:89,img:"footballimages/lautaroMartinez.webp",league:"Serie A"},
+  {name:"Julian Alvarez",pos:"ST",rating:89,img:"footballimages/alvarez.webp",league:"La Liga"},
+  {name:"Victor Osimhen",pos:"ST",rating:88,img:"footballimages/osimhen.webp",league:"Super Lig"},
+  {name:"Alexander Isak",pos:"ST",rating:89,img:"footballimages/isak.webp",league:"Prem"},
+  {name:"Ollie Watkins",pos:"ST",rating:86,img:"footballimages/watkins.webp",league:"Prem"},
+  {name:"Lionel Messi",pos:"ST",rating:90,img:"footballimages/messi.webp",league:"MLS"},
+  {name:"Cristiano Ronaldo",pos:"ST",rating:90,img:"footballimages/cristianoRonaldo.webp",league:"Prem"},
+  {name:"Ronaldo",pos:"ST",rating:94,img:"footballimages/ronaldo.webp",league:"Icon"},
+  {name:"Karim Benzema",pos:"ST",rating:87,img:"footballimages/benzema.webp",league:"Saudi Pro"},
+  {name:"Zlatan Ibrahimovic",pos:"ST",rating:95,img:"footballimages/ibrahimovic.webp",league:"Icon"},
+  {name:"Viktor Gyokeres",pos:"ST",rating:87,img:"footballimages/gyokeres.webp",league:"Prem"},
 ];
 
-const FORMATIONS={
-  "4-3-3":{positions:["GK","LW","ST","RW","CM","CM","CM","LB","CB","CB","RB"],coords:[[50,88],[14,12],[50,12],[86,12],[22,40],[50,40],[78,40],[10,64],[35,64],[65,64],[90,64]]},
-  "4-4-2":{positions:["GK","ST","ST","LM","CM","CM","RM","LB","CB","CB","RB"],coords:[[50,88],[35,12],[65,12],[10,40],[36,40],[64,40],[90,40],[10,64],[35,64],[65,64],[90,64]]},
-  "4-2-3-1":{positions:["GK","ST","LM","CAM","RM","CDM","CDM","LB","CB","CB","RB"],coords:[[50,88],[50,10],[14,30],[50,30],[86,30],[30,48],[70,48],[10,68],[35,68],[65,68],[90,68]]},
-  "4-1-2-1-2":{positions:["GK","ST","ST","CAM","CM","CM","CDM","LB","CB","CB","RB"],coords:[[50,88],[30,10],[70,10],[50,26],[28,42],[72,42],[50,56],[10,70],[33,70],[67,70],[90,70]]},
-  "4-4-1-1":{positions:["GK","ST","CAM","LM","CM","CM","RM","LB","CB","CB","RB"],coords:[[50,88],[50,10],[50,26],[10,44],[34,44],[66,44],[90,44],[10,66],[33,66],[67,66],[90,66]]},
-  "3-4-3":{positions:["GK","LW","ST","RW","LM","CM","CM","RM","CB","CB","CB"],coords:[[50,88],[14,18],[50,12],[86,18],[10,46],[34,46],[66,46],[90,46],[25,68],[50,68],[75,68]]},
-  "3-5-2":{positions:["GK","ST","ST","LM","CDM","CM","CAM","RM","CB","CB","CB"],coords:[[50,88],[32,10],[68,10],[10,42],[30,42],[50,42],[70,42],[90,42],[25,68],[50,68],[75,68]]},
-  "5-4-1":{positions:["GK","ST","LM","CM","CM","RM","LB","CB","CB","CB","RB"],coords:[[50,88],[50,10],[10,42],[34,42],[66,42],[90,42],[8,66],[28,66],[50,66],[72,66],[92,66]]},
-  "5-2-1-2":{positions:["GK","ST","ST","CAM","CM","CM","LB","CB","CB","CB","RB"],coords:[[50,88],[30,10],[70,10],[50,28],[30,46],[70,46],[8,68],[28,68],[50,68],[72,68],[92,68]]}
-};
+const BASKETBALL_PLAYERS=[
+  // ── PG ──
+  {name:'Shai Gilgeous-Alexander',pos:'PG',rating:97,team:'Oklahoma City Thunder',era:'current',img:'basketballimages/sga.webp'},
+  {name:'Luka Dončić',pos:'PG',rating:96,team:'Dallas Mavericks',era:'current',img:'basketballimages/luka.webp'},
+  {name:'Stephen Curry',pos:'PG',rating:96,team:'Golden State Warriors',era:'current',img:'basketballimages/curry.webp'},
+  {name:'Jalen Brunson',pos:'PG',rating:91,team:'New York Knicks',era:'current',img:'basketballimages/brunson.webp'},
+  {name:'Tyrese Maxey',pos:'PG',rating:93,team:'Philadelphia 76ers',era:'current',img:'basketballimages/maxey.webp'},
+  {name:'De\'Aaron Fox',pos:'PG',rating:95,team:'Sacramento Kings',era:'current',img:'basketballimages/fox.webp'},
+  {name:'Ja Morant',pos:'PG',rating:96,team:'Memphis Grizzlies',era:'current',img:'basketballimages/morant.webp'},
+  {name:'Cade Cunningham',pos:'PG',rating:95,team:'Detroit Pistons',era:'current',img:'basketballimages/cunningham.webp'},
+  {name:'Tyrese Haliburton',pos:'PG',rating:94,team:'Indiana Pacers',era:'current',img:'basketballimages/haliburton.webp'},
+  {name:'LaMelo Ball',pos:'PG',rating:84,team:'Charlotte Hornets',era:'current',img:'basketballimages/ball.webp'},
+  {name:'Jamal Murray',pos:'PG',rating:84,team:'Denver Nuggets',era:'current',img:'basketballimages/jamalMurray.webp'},
+  {name:'Trae Young',pos:'PG',rating:87,team:'Atlanta Hawks',era:'current',img:'basketballimages/young.webp'},
+  {name:'James Harden',pos:'PG',rating:96,team:'Houston Rockets',era:'current',img:'basketballimages/harden.webp'},
+  {name:'Kyrie Irving',pos:'PG',rating:98,team:'Cleveland Cavaliers',era:'current',img:'basketballimages/irving.webp'},
+  {name:'Darius Garland',pos:'PG',rating:92,team:'Cleveland Cavaliers',era:'current',img:'basketballimages/garland.webp'},
+  {name:'Damian Lillard',pos:'PG',rating:92,team:'Portland Trail Blazers',era:'current',img:'basketballimages/lillard.webp'},
+  {name:'Fred VanVleet',pos:'PG',rating:80,team:'Houston Rockets',era:'current',img:'basketballimages/vanvleet.webp'},
+  {name:'Immanuel Quickley',pos:'PG',rating:80,team:'Toronto Raptors',era:'current',img:'basketballimages/quickley.webp'},
+  {name:'Josh Giddey',pos:'PG',rating:89,team:'Chicago Bulls',era:'current',img:'basketballimages/giddey.webp'},
+  {name:'Stephon Castle',pos:'PG',rating:83,team:'San Antonio Spurs',era:'current',img:'basketballimages/castle.webp'},
+  {name:'Magic Johnson',pos:'PG',rating:105,team:'LA Lakers',era:'alltime',img:'basketballimages/magicJohnson.webp'},
+  {name:'Oscar Robertson',pos:'PG',rating:100,team:'Sacramento Kings',era:'alltime',img:'basketballimages/oscarRobertson.webp'},
+  {name:'Isiah Thomas',pos:'PG',rating:94,team:'Detroit Pistons',era:'alltime',img:'basketballimages/isiahThomas.webp'},
+  {name:'John Stockton',pos:'PG',rating:95,team:'Utah Jazz',era:'alltime',img:'basketballimages/stockton.webp'},
+  {name:'Steve Nash',pos:'PG',rating:100,team:'Phoenix Suns',era:'alltime',img:'basketballimages/nash.webp'},
+  {name:'Jason Kidd',pos:'PG',rating:93,team:'Phoenix Suns',era:'alltime',img:'basketballimages/kidd.webp'},
+  {name:'Chris Paul',pos:'PG',rating:101,team:'New Orleans Pelicans',era:'alltime',img:'basketballimages/paul.webp'},
+  {name:'Walt Frazier',pos:'PG',rating:96,team:'New York Knicks',era:'alltime',img:'basketballimages/frazier.webp'},
+  {name:'Gary Payton',pos:'PG',rating:101,team:'Seattle SuperSonics',era:'alltime',img:'basketballimages/garyPayton.webp'},
+  {name:'Tony Parker',pos:'PG',rating:93,team:'San Antonio Spurs',era:'alltime',img:'basketballimages/parker.webp'},
+  // ── SG ──
+  {name:'Anthony Edwards',pos:'SG',rating:95,team:'Minnesota Timberwolves',era:'current',img:'basketballimages/edwards.webp'},
+  {name:'Devin Booker',pos:'SG',rating:90,team:'Phoenix Suns',era:'current',img:'basketballimages/booker.webp'},
+  {name:'Donovan Mitchell',pos:'SG',rating:95,team:'Cleveland Cavaliers',era:'current',img:'basketballimages/mitchell.webp'},
+  {name:'Jaylen Brown',pos:'SG',rating:91,team:'Boston Celtics',era:'current',img:'basketballimages/brown.webp'},
+  {name:'Bradley Beal',pos:'SG',rating:85,team:'Phoenix Suns',era:'current',img:'basketballimages/beal.webp'},
+  {name:'Desmond Bane',pos:'SG',rating:88,team:'Memphis Grizzlies',era:'current',img:'basketballimages/bane.webp'},
+  {name:'Tyler Herro',pos:'SG',rating:80,team:'Miami Heat',era:'current',img:'basketballimages/herro.webp'},
+  {name:'Jalen Green',pos:'SG',rating:80,team:'Houston Rockets',era:'current',img:'basketballimages/jalenGreen.webp'},
+  {name:'Austin Reaves',pos:'SG',rating:80,team:'LA Lakers',era:'current',img:'basketballimages/reaves.webp'},
+  {name:'Brandon Miller',pos:'SG',rating:78,team:'Charlotte Hornets',era:'current',img:'basketballimages/miller.webp'},
+  {name:'Cam Thomas',pos:'SG',rating:76,team:'Brooklyn Nets',era:'current',img:'basketballimages/thomas.webp'},
+  {name:'Malik Monk',pos:'SG',rating:81,team:'Sacramento Kings',era:'current',img:'basketballimages/monk.webp'},
+  {name:'Anfernee Simons',pos:'SG',rating:78,team:'Portland Trail Blazers',era:'current',img:'basketballimages/simons.webp'},
+  {name:'CJ McCollum',pos:'SG',rating:86,team:'New Orleans Pelicans',era:'current',img:'basketballimages/mcCollum.webp'},
+  {name:'Derrick White',pos:'SG',rating:87,team:'Boston Celtics',era:'current',img:'basketballimages/derrickWhite.webp'},
+  {name:'Jalen Williams',pos:'SG',rating:94,team:'Oklahoma City Thunder',era:'current',img:'basketballimages/williams.webp'},
+  {name:'Zach LaVine',pos:'SG',rating:80,team:'Chicago Bulls',era:'current',img:'basketballimages/lavine.webp'},
+  {name:'RJ Barrett',pos:'SG',rating:81,team:'Toronto Raptors',era:'current',img:'basketballimages/barrett.webp'},
+  {name:'Jordan Poole',pos:'SG',rating:85,team:'Washington Wizards',era:'current',img:'basketballimages/poole.webp'},
+  {name:'Reed Sheppard',pos:'SG',rating:73,team:'Houston Rockets',era:'current',img:'basketballimages/sheppard.webp'},
+  {name:'Michael Jordan',pos:'SG',rating:105,team:'Chicago Bulls',era:'alltime',img:'basketballimages/jordan.webp'},
+  {name:'Tony Allen',pos:'SG',rating:98,team:'Memphis Grizzlies',era:'alltime',img:'basketballimages/tonyAllen.webp'},
+  {name:'Dwyane Wade',pos:'SG',rating:99,team:'Miami Heat',era:'alltime',img:'basketballimages/wade.webp'},
+  {name:'Jerry West',pos:'SG',rating:100,team:'LA Lakers',era:'alltime',img:'basketballimages/west.webp'},
+  {name:'Allen Iverson',pos:'SG',rating:101,team:'Philadelphia 76ers',era:'alltime',img:'basketballimages/iverson.webp'},
+  {name:'Clyde Drexler',pos:'SG',rating:100,team:'Portland Trail Blazers',era:'alltime',img:'basketballimages/drexler.webp'},
+  {name:'Danny Green',pos:'SG',rating:96,team:'San Antonio Spurs',era:'alltime',img:'basketballimages/dannyGreen.webp'},
+  {name:'Ray Allen',pos:'SG',rating:101,team:'Seattle SuperSonics',era:'alltime',img:'basketballimages/rayAllen.webp'},
+  {name:'George Gervin',pos:'SG',rating:98,team:'San Antonio Spurs',era:'alltime',img:'basketballimages/gervin.webp'},
+  {name:'Earl Monroe',pos:'SG',rating:96,team:'Washington Wizards',era:'alltime',img:'basketballimages/monroe.webp'},
+  // ── SF ──
+  {name:'LeBron James',pos:'SF',rating:98,team:'Cleveland Cavaliers',era:'current',img:'basketballimages/james.webp'},
+  {name:'Kevin Durant',pos:'SF',rating:96,team:'Golden State Warriors',era:'current',img:'basketballimages/durant.webp'},
+  {name:'Kawhi Leonard',pos:'SF',rating:96,team:'LA Clippers',era:'current',img:'basketballimages/leonard.webp'},
+  {name:'Jayson Tatum',pos:'SF',rating:98,team:'Boston Celtics',era:'current',img:'basketballimages/tatum.webp'},
+  {name:'Jimmy Butler',pos:'SF',rating:87,team:'Miami Heat',era:'current',img:'basketballimages/butler.webp'},
+  {name:'Mikal Bridges',pos:'SF',rating:84,team:'New York Knicks',era:'current',img:'basketballimages/mikalBridges.webp'},
+  {name:'Franz Wagner',pos:'SF',rating:84,team:'Orlando Magic',era:'current',img:'basketballimages/wagner.webp'},
+  {name:'Scottie Barnes',pos:'SF',rating:80,team:'Toronto Raptors',era:'current',img:'basketballimages/barnes.webp'},
+  {name:'Michael Porter Jr.',pos:'SF',rating:80,team:'Denver Nuggets',era:'current',img:'basketballimages/porterJr.webp'},
+  {name:'Brandon Ingram',pos:'SF',rating:85,team:'New Orleans Pelicans',era:'current',img:'basketballimages/ingram.webp'},
+  {name:'OG Anunoby',pos:'SF',rating:84,team:'New York Knicks',era:'current',img:'basketballimages/anunoby.webp'},
+  {name:'Deni Avdija',pos:'SF',rating:82,team:'Washington Wizards',era:'current',img:'basketballimages/avdija.webp'},
+  {name:'Trey Murphy III',pos:'SF',rating:82,team:'New Orleans Pelicans',era:'current',img:'basketballimages/murphyIII.webp'},
+  {name:'Herbert Jones',pos:'SF',rating:80,team:'New Orleans Pelicans',era:'current',img:'basketballimages/jones.webp'},
+  {name:'Andrew Wiggins',pos:'SF',rating:77,team:'Golden State Warriors',era:'current',img:'basketballimages/wiggins.webp'},
+  {name:'Khris Middleton',pos:'SF',rating:84,team:'Milwaukee Bucks',era:'current',img:'basketballimages/middleton.webp'},
+  {name:'DeMar DeRozan',pos:'SF',rating:84,team:'Chicago Bulls',era:'current',img:'basketballimages/deRozan.webp'},
+  {name:'Ausar Thompson',pos:'SF',rating:78,team:'Detroit Pistons',era:'current',img:'basketballimages/thompson.webp'},
+  {name:'Keldon Johnson',pos:'SF',rating:79,team:'San Antonio Spurs',era:'current',img:'basketballimages/keldonJohnson.webp'},
+  {name:'Jaime Jaquez Jr.',pos:'SF',rating:76,team:'Miami Heat',era:'current',img:'basketballimages/jaquezJr.webp'},
+  {name:'Larry Bird',pos:'SF',rating:105,team:'Boston Celtics',era:'alltime',img:'basketballimages/bird.webp'},
+  {name:'Julius Erving',pos:'SF',rating:101,team:'Brooklyn Nets',era:'alltime',img:'basketballimages/erving.webp'},
+  {name:'Elgin Baylor',pos:'SF',rating:98,team:'LA Lakers',era:'alltime',img:'basketballimages/baylor.webp'},
+  {name:'Scottie Pippen',pos:'SF',rating:99,team:'Chicago Bulls',era:'alltime',img:'basketballimages/pippen.webp'},
+  {name:'John Havlicek',pos:'SF',rating:98,team:'Boston Celtics',era:'alltime',img:'basketballimages/havlicek.webp'},
+  {name:'Rick Barry',pos:'SF',rating:90,team:'Houston Rockets',era:'alltime',img:'basketballimages/barry.webp'},
+  {name:'James Worthy',pos:'SF',rating:100,team:'LA Lakers',era:'alltime',img:'basketballimages/worthy.webp'},
+  {name:'Dominique Wilkins',pos:'SF',rating:96,team:'Atlanta Hawks',era:'alltime',img:'basketballimages/wilkins.webp'},
+  {name:'Paul Pierce',pos:'SF',rating:101,team:'Boston Celtics',era:'alltime',img:'basketballimages/pierce.webp'},
+  {name:'Carmelo Anthony',pos:'SF',rating:100,team:'Denver Nuggets',era:'alltime',img:'basketballimages/anthony.webp'},
+  // ── PF ──
+  {name:'Giannis Antetokounmpo',pos:'PF',rating:97,team:'Milwaukee Bucks',era:'current',img:'basketballimages/antetokounmpo.webp'},
+  {name:'Bam Adebayo',pos:'PF',rating:92,team:'Miami Heat',era:'current',img:'basketballimages/adebayo.webp'},
+  {name:'Anthony Davis',pos:'PF',rating:91,team:'LA Lakers',era:'current',img:'basketballimages/davis.webp'},
+  {name:'Zion Williamson',pos:'PF',rating:84,team:'New Orleans Pelicans',era:'current',img:'basketballimages/williamson.webp'},
+  {name:'Paolo Banchero',pos:'PF',rating:87,team:'Orlando Magic',era:'current',img:'basketballimages/banchero.webp'},
+  {name:'Pascal Siakam',pos:'PF',rating:87,team:'Indiana Pacers',era:'current',img:'basketballimages/siakam.webp'},
+  {name:'Lauri Markkanen',pos:'PF',rating:86,team:'Utah Jazz',era:'current',img:'basketballimages/markkanen.webp'},
+  {name:'Jalen Johnson',pos:'PF',rating:84,team:'Atlanta Hawks',era:'current',img:'basketballimages/jalenJohnson.webp'},
+  {name:'Julius Randle',pos:'PF',rating:82,team:'Minnesota Timberwolves',era:'current',img:'basketballimages/randle.webp'},
+  {name:'Kel\'el Ware',pos:'PF',rating:73,team:'Miami Heat',era:'current',img:'basketballimages/ware.webp'},
+  {name:'Evan Mobley',pos:'PF',rating:84,team:'Cleveland Cavaliers',era:'current',img:'basketballimages/mobley.webp'},
+  {name:'Aaron Gordon',pos:'PF',rating:80,team:'Denver Nuggets',era:'current',img:'basketballimages/gordon.webp'},
+  {name:'Domantas Sabonis',pos:'PF',rating:85,team:'Indiana Pacers',era:'current',img:'basketballimages/sabonis.webp'},
+  {name:'Draymond Green',pos:'PF',rating:80,team:'Golden State Warriors',era:'current',img:'basketballimages/green.webp'},
+  {name:'Jabari Smith Jr.',pos:'PF',rating:77,team:'Houston Rockets',era:'current',img:'basketballimages/smithJr.webp'},
+  {name:'Keegan Murray',pos:'PF',rating:78,team:'Sacramento Kings',era:'current',img:'basketballimages/keeganMurray.webp'},
+  {name:'Kyle Kuzma',pos:'PF',rating:80,team:'Washington Wizards',era:'current',img:'basketballimages/kuzma.webp'},
+  {name:'Tobias Harris',pos:'PF',rating:78,team:'Detroit Pistons',era:'current',img:'basketballimages/harris.webp'},
+  {name:'Jerami Grant',pos:'PF',rating:80,team:'Portland Trail Blazers',era:'current',img:'basketballimages/grant.webp'},
+  {name:'Miles Bridges',pos:'PF',rating:77,team:'Charlotte Hornets',era:'current',img:'basketballimages/milesBridges.webp'},
+  {name:'Tim Duncan',pos:'PF',rating:105,team:'San Antonio Spurs',era:'alltime',img:'basketballimages/duncan.webp'},
+  {name:'Kevin Garnett',pos:'PF',rating:96,team:'Minnesota Timberwolves',era:'alltime',img:'basketballimages/garnett.webp'},
+  {name:'Dirk Nowitzki',pos:'PF',rating:100,team:'Dallas Mavericks',era:'alltime',img:'basketballimages/nowitzki.webp'},
+  {name:'Marc Gasol',pos:'PF',rating:98,team:'Memphis Grizzlies',era:'alltime',img:'basketballimages/marcGasol.webp'},
+  {name:'Karl Malone',pos:'PF',rating:96,team:'Utah Jazz',era:'alltime',img:'basketballimages/malone.webp'},
+  {name:'Elvin Hayes',pos:'PF',rating:98,team:'Washington Wizards',era:'alltime',img:'basketballimages/hayes.webp'},
+  {name:'Kevin McHale',pos:'PF',rating:101,team:'Boston Celtics',era:'alltime',img:'basketballimages/mcHale.webp'},
+  {name:'Bob Pettit',pos:'PF',rating:98,team:'Atlanta Hawks',era:'alltime',img:'basketballimages/pettit.webp'},
+  {name:'Chris Bosh',pos:'PF',rating:101,team:'Toronto Raptors',era:'alltime',img:'basketballimages/bosh.webp'},
+  {name:'Pau Gasol',pos:'PF',rating:98,team:'LA Lakers',era:'alltime',img:'basketballimages/pauGasol.webp'},
+  // ── C ──
+  {name:'Nikola Jokić',pos:'C',rating:90,team:'Denver Nuggets',era:'current',img:'basketballimages/jokic.webp'},
+  {name:'Joel Embiid',pos:'C',rating:90,team:'Philadelphia 76ers',era:'current',img:'basketballimages/embiid.webp'},
+  {name:'Victor Wembanyama',pos:'C',rating:96,team:'San Antonio Spurs',era:'current',img:'basketballimages/wembanyama.webp'},
+  {name:'Karl-Anthony Towns',pos:'C',rating:94,team:'New York Knicks',era:'current',img:'basketballimages/towns.webp'},
+  {name:'Chet Holmgren',pos:'C',rating:80,team:'Oklahoma City Thunder',era:'current',img:'basketballimages/holmgren.webp'},
+  {name:'Alperen Şengün',pos:'C',rating:80,team:'Houston Rockets',era:'current',img:'basketballimages/sengun.webp'},
+  {name:'Jarrett Allen',pos:'C',rating:84,team:'Cleveland Cavaliers',era:'current',img:'basketballimages/jarrettAllen.webp'},
+  {name:'Jalen Duren',pos:'C',rating:83,team:'Detroit Pistons',era:'current',img:'basketballimages/duren.webp'},
+  {name:'Myles Turner',pos:'C',rating:80,team:'Indiana Pacers',era:'current',img:'basketballimages/turner.webp'},
+  {name:'Nic Claxton',pos:'C',rating:80,team:'Brooklyn Nets',era:'current',img:'basketballimages/claxton.webp'},
+  {name:'Kristaps Porziņģis',pos:'C',rating:81,team:'Boston Celtics',era:'current',img:'basketballimages/porzingis.webp'},
+  {name:'Brook Lopez',pos:'C',rating:78,team:'Milwaukee Bucks',era:'current',img:'basketballimages/lopez.webp'},
+  {name:'Nikola Vučević',pos:'C',rating:80,team:'Chicago Bulls',era:'current',img:'basketballimages/vucevic.webp'},
+  {name:'Ivica Zubac',pos:'C',rating:80,team:'LA Clippers',era:'current',img:'basketballimages/zubac.webp'},
+  {name:'Deandre Ayton',pos:'C',rating:87,team:'Portland Trail Blazers',era:'current',img:'basketballimages/ayton.webp'},
+  {name:'Walker Kessler',pos:'C',rating:78,team:'Utah Jazz',era:'current',img:'basketballimages/kessler.webp'},
+  {name:'Naz Reid',pos:'C',rating:86,team:'Minnesota Timberwolves',era:'current',img:'basketballimages/reid.webp'},
+  {name:'Dereck Lively II',pos:'C',rating:85,team:'Dallas Mavericks',era:'current',img:'basketballimages/lively.webp'},
+  {name:'Donovan Clingan',pos:'C',rating:72,team:'Portland Trail Blazers',era:'current',img:'basketballimages/clingan.webp'},
+  {name:'Rudy Gobert',pos:'C',rating:87,team:'Minnesota Timberwolves',era:'current',img:'basketballimages/gobert.webp'},
+  {name:'Kareem Abdul-Jabbar',pos:'C',rating:105,team:'LA Lakers',era:'alltime',img:'basketballimages/abduljabbar.webp'},
+  {name:'Alonzo Mourning',pos:'C',rating:98,team:'Charlotte Hornets',era:'alltime',img:'basketballimages/mourning.webp'},
+  {name:'Wilt Chamberlain',pos:'C',rating:100,team:'Golden State Warriors',era:'alltime',img:'basketballimages/chamberlain.webp'},
+  {name:'Shaquille O\'Neal',pos:'C',rating:101,team:'LA Lakers',era:'alltime',img:'basketballimages/oNeal.webp'},
+  {name:'Hakeem Olajuwon',pos:'C',rating:99,team:'Houston Rockets',era:'alltime',img:'basketballimages/olajuwon.webp'},
+  {name:'David Robinson',pos:'C',rating:99,team:'San Antonio Spurs',era:'alltime',img:'basketballimages/davidRobinson.webp'},
+  {name:'Moses Malone',pos:'C',rating:96,team:'Philadelphia 76ers',era:'alltime',img:'basketballimages/mosesMalone.webp'},
+  {name:'Patrick Ewing',pos:'C',rating:101,team:'New York Knicks',era:'alltime',img:'basketballimages/ewing.webp'},
+  {name:'Yao Ming',pos:'C',rating:100,team:'Houston Rockets',era:'alltime',img:'basketballimages/yao.webp'},
+  {name:'Bill Walton',pos:'C',rating:98,team:'Portland Trail Blazers',era:'alltime',img:'basketballimages/walton.webp'},
+];
 
-// ═══════════════════════════════════════════════
-//  IMAGE HELPERS
-// ═══════════════════════════════════════════════
 const getImgUrl = (imgUrl) => {
   if (!imgUrl) return "";
   if (imgUrl.startsWith('./') || imgUrl.startsWith('/')) return imgUrl;
@@ -660,18 +666,31 @@ const getImgUrl = (imgUrl) => {
   return imgUrl;
 };
 
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// How many picks make a complete lineup. Same number regardless of sport
+// for now — easy to split into separate football/basketball targets later.
+const LINEUP_SIZE = 8;
+const PICK_SECONDS = 15;
 // ═══════════════════════════════════════════════
 //  MULTIPLAYER BACKEND
-//  Base44 is used ONLY as a headless matchmaking database: each room
-//  stores a 4-digit code plus each player's PeerJS peer ID. Once the
-//  guest reads the host's peer ID from Base44 and opens a direct
+//  Base44 is used ONLY as a headless matchmaking database (the same
+//  GameRooms table/app that Apex XI and All-Stars use — GAME_ID keeps
+//  room codes from colliding between games): each room stores a
+//  4-digit code plus each player's PeerJS peer ID. Once the guest
+//  reads the host's peer ID from Base44 and opens a direct
 //  PeerJS/WebRTC data connection, Base44 is not touched again for that
-//  room — every gameplay message (formation picks, draft progress,
-//  results) flows peer-to-peer from then on.
+//  room — every gameplay message (sport, draft progress, results)
+//  flows peer-to-peer from then on.
 // ═══════════════════════════════════════════════
-const GAME_ID = "apexxi";
-
-// TODO: paste your Base44 app ID here (find it in the Base44 editor URL)
+const GAME_ID = "blitzdraft";
 const BASE44_APP_ID = "6a6a39f45047f242897fc81a";
 let base44 = null;
 (async () => {
@@ -685,12 +704,7 @@ let base44 = null;
 
 // ═══════════════════════════════════════════════
 //  TURN SERVER (optional — fallback for restrictive networks)
-//  STUN alone (the Google server below) gets most players connected
-//  directly. TURN is a relay of last resort for networks that block
-//  direct P2P outright — corporate/school firewalls, some carrier
-//  networks, symmetric NAT. Free tier via metered.ca: sign up, create
-//  an app, paste its subdomain + API key below. Leave the placeholder
-//  in place and it just runs on STUN only, same as before.
+//  Same shared credentials used across all games on this backend.
 // ═══════════════════════════════════════════════
 const METERED_APP_NAME = "game-turn";
 const METERED_API_KEY = "wR5715kDMjfFjv408SzC8szhEF0_K9WHpRh4XwzdkZdJ1cgJ";
@@ -706,21 +720,20 @@ const iceServersReady = (async () => {
   }
 })();
 
-// Turns any thrown error into a short, human-readable string for on-screen
-// display — needed because not everyone testing this can get to DevTools
-// (e.g. managed/school Chromebooks that block it outright).
-function describeError(err){
-  if (!err) return 'unknown error';
-  const status = err.status || (err.response && err.response.status);
-  const msg = err.message || (typeof err === 'string' ? err : JSON.stringify(err));
-  return status ? '[' + status + '] ' + msg : msg;
-}
-
 function requireBase44(errEl){
   if(base44) return true;
   const msg = 'Multiplayer backend not configured — set BASE44_APP_ID.';
   if(errEl) errEl.textContent = msg; else console.error(msg);
   return false;
+}
+
+// Turns any thrown error into a short, human-readable string for
+// on-screen display (some players won't have DevTools available).
+function describeError(err){
+  if (!err) return 'unknown error';
+  const status = err.status || (err.response && err.response.status);
+  const msg = err.message || (typeof err === 'string' ? err : JSON.stringify(err));
+  return status ? '[' + status + '] ' + msg : msg;
 }
 
 // ═══════════════════════════════════════════════
@@ -734,18 +747,20 @@ let connectToken = 0;      // bumped by leaveRoom()/new attempts so a stale asyn
                             // it's stale and no-op instead of clobbering current state
 
 let selectedMode = '';
-let lobbyFormation = '';
-let joinFormation = '';
 
 let G = {
   username:'', mode:'', roomCode:'',
-  myFormation:'', oppFormation:'', oppUsername:'',
-  positions:[], pickedPlayers:[], usedNames:new Set(),
-  lockedChoices:{}, totalRating:0, selectedLeagues:[],
-  activeSlot:null, activeFilter:null,
-  draftDone:false, oppDraftDone:false, oppCount:0, oppPicks:null,
+  sport:'', oppUsername:'', oppSport:'',
+  lineup:[], oppLineup:null, oppCount:0,
+  draftDone:false, oppDraftDone:false,
   connected:false
 };
+
+// Deck-drafting runtime state (not synced — each player shuffles their own deck)
+let deck = [];
+let faceUp = null;
+let pickTimer = null;
+let timeLeft = PICK_SECONDS;
 
 function updateConnBadge(){
   const el = document.getElementById('connBadge');
@@ -782,10 +797,11 @@ function setupPeerListeners(){
 
 // Tears down the current room: closes the P2P connection, destroys the
 // local Peer, and (best-effort, fire-and-forget) marks the Base44 row
-// closed if we created one, so a stale room with a dead peer ID can't
+// ended if we created one, so a stale room with a dead peer ID can't
 // be matched by a future joiner.
 function leaveRoom(){
   connectToken++; // invalidate any in-flight async callbacks from this room attempt
+  clearPickTimer();
   if (gameConn) { try{ gameConn.close(); }catch(e){} gameConn = null; }
   if (localPeer) { try{ localPeer.destroy(); }catch(e){} localPeer = null; }
   if (activeRoomId && base44) {
@@ -803,45 +819,38 @@ function handleIncoming(data){
     case 'JOIN':
       if(G.mode !== 'host') return;
       G.oppUsername = data.name;
-      G.oppFormation = data.formation;
-      G.connected = true;
       document.getElementById('slotName1').textContent = data.name;
       document.getElementById('slot1').classList.add('filled');
-      send({type:'HOST_INFO', name:G.username, hostFormation:lobbyFormation});
+      G.connected = true;
+      send({type:'HOST_INFO', name:G.username, sport:G.sport});
       checkLobbyReady();
       updateConnBadge();
       break;
     case 'HOST_INFO':
       if(G.mode !== 'guest') return;
       G.oppUsername = data.name;
-      G.oppFormation = data.hostFormation;
+      G.oppSport = data.sport || '';
       G.connected = true;
       resetJoinBtn();
       showGuestLobby();
       updateConnBadge();
       break;
-    case 'HOST_FORMATION_UPDATE':
-      if(G.mode === 'guest') G.oppFormation = data.formation;
-      break;
-    case 'FORMATION_UPDATE':
-      if(G.mode === 'host'){ G.oppFormation = data.formation; checkLobbyReady(); }
+    case 'HOST_SPORT_UPDATE':
+      if(G.mode === 'guest'){ G.oppSport = data.sport; }
       break;
     case 'START':
-      if(G.mode === 'guest'){ G.oppFormation = data.hostFormation; initDraft(); }
+      if(G.mode === 'guest'){ G.sport = data.sport; startDraftingUI(); }
       break;
     case 'PICK_UPDATE':
       handleOppPickUpdate(data);
       break;
     case 'PLAY_AGAIN':
-      G.oppFormation = data.hostFormation || G.oppFormation;
-      initDraft();
+      G.sport = data.sport || G.sport;
+      startDraftingUI();
       break;
     case 'RESULT':
       if(G.mode === 'guest'){
-        const goals = {a:data.guestGoals, b:data.hostGoals};
-        const my = data.guestScore, opp = data.hostScore;
-        G.oppDraftDone = true;
-        setTimeout(()=>showResult(goals, my, opp), 800);
+        showResult(data.guestScore, data.hostScore, G.lineup, data.hostLineup);
       }
       break;
     case 'ROOM_CLOSED':
@@ -849,20 +858,8 @@ function handleIncoming(data){
       break;
   }
 }
-
-
 // ═══════════════════════════════════════════════
-//  QR CODE
-// ═══════════════════════════════════════════════
-function showQR(){
-  const url = window.location.href;
-  document.getElementById('qrUrl').textContent = url;
-  document.getElementById('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=e8b84b&bgcolor=171a24&data=' + encodeURIComponent(url);
-  showScreen('qrScreen');
-}
-
-// ═══════════════════════════════════════════════
-//  HOME
+//  HOME SCREEN
 // ═══════════════════════════════════════════════
 function selectMode(m){
   selectedMode = m;
@@ -886,34 +883,24 @@ function homeNext(){
 }
 
 // ═══════════════════════════════════════════════
-//  FORMATION PICKERS
+//  SPORT PICKER (host only)
 // ═══════════════════════════════════════════════
-function pickFormation(btn, ctx){
-  const rowId = ctx==='lobby' ? 'lobbyFormationRow' : 'joinFormationRow';
-  document.getElementById(rowId).querySelectorAll('.form-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-  if(ctx === 'lobby'){
-    lobbyFormation = btn.dataset.f;
-    send({type:'HOST_FORMATION_UPDATE', formation:lobbyFormation});
-    checkLobbyReady();
-  } else {
-    joinFormation = btn.dataset.f;
-    checkJoinReady();
-  }
+function pickSport(sport){
+  G.sport = sport;
+  document.getElementById('lobbySportFootball').classList.toggle('selected', sport==='football');
+  document.getElementById('lobbySportBasketball').classList.toggle('selected', sport==='basketball');
+  send({type:'HOST_SPORT_UPDATE', sport:G.sport});
+  checkLobbyReady();
 }
-function checkJoinReady(){
-  const code = document.getElementById('joinCodeInput').value.trim();
-  document.getElementById('joinBtn').disabled = !(joinFormation && code.length === 4);
-}
-document.getElementById('joinCodeInput').addEventListener('input', checkJoinReady);
 
 // ═══════════════════════════════════════════════
 //  HOST — create & run the lobby
 // ═══════════════════════════════════════════════
 function goToLobby(){
   leaveRoom();
-  lobbyFormation = '';
-  document.getElementById('lobbyFormationRow').querySelectorAll('.form-btn').forEach(b=>b.classList.remove('selected'));
+  G.sport = '';
+  document.getElementById('lobbySportFootball').classList.remove('selected');
+  document.getElementById('lobbySportBasketball').classList.remove('selected');
 
   document.getElementById('slotName0').textContent = G.username;
   document.getElementById('slot0').classList.add('filled');
@@ -989,17 +976,14 @@ async function createRoom(attempt = 1){
 
 function checkLobbyReady(){
   const guestIn    = G.oppUsername !== '';
-  const hostPicked = lobbyFormation !== '';
-  const guestPicked= G.oppFormation !== '';
-  const canStart   = guestIn && hostPicked && guestPicked;
+  const sportPicked = G.sport !== '';
+  const canStart   = guestIn && sportPicked;
   document.getElementById('lobbyStartBtn').disabled = !canStart;
 
   if(canStart){
     setLobbyStatus('ready', 'Both players ready — start the draft!');
-  } else if(guestIn && hostPicked && !guestPicked){
-    setLobbyStatus('waiting', G.oppUsername + ' joined! Waiting for their formation...');
-  } else if(guestIn && !hostPicked){
-    setLobbyStatus('waiting', G.oppUsername + ' joined! Pick your formation to continue.');
+  } else if(guestIn && !sportPicked){
+    setLobbyStatus('waiting', G.oppUsername + ' joined! Choose a sport to continue.');
   } else {
     setLobbyStatus('waiting', 'Waiting for opponent to join...');
   }
@@ -1012,31 +996,32 @@ function setLobbyStatus(state, text){
 }
 
 function startDraft(){
-  if(!lobbyFormation || !G.oppUsername || !G.oppFormation) return;
-  send({type:'START', hostFormation:lobbyFormation});
-  G.myFormation = lobbyFormation;
-  initDraft();
+  if(!G.sport || !G.oppUsername) return;
+  send({type:'START', sport:G.sport});
+  startDraftingUI();
 }
 
 // ═══════════════════════════════════════════════
-//  GUEST — find & join a room
+//  JOIN ROOM
 // ═══════════════════════════════════════════════
-async function joinRoom(){
-  const codeInput = document.getElementById('joinCodeInput');
-  const code = codeInput ? codeInput.value.trim() : '';
-  const errEl = document.getElementById('joinError');
-  if(errEl) errEl.textContent = '';
+document.getElementById('joinCodeInput').addEventListener('input', checkJoinReady);
+function checkJoinReady(){
+  const code = document.getElementById('joinCodeInput').value.trim();
+  document.getElementById('joinBtn').disabled = code.length !== 4;
+}
 
-  if(code.length !== 4){ if(errEl) errEl.textContent = 'Enter a 4-digit code.'; return; }
-  if(!joinFormation){ if(errEl) errEl.textContent = 'Pick a formation first.'; return; }
+async function joinRoom(){
+  const code = document.getElementById('joinCodeInput').value.trim();
+  const errEl = document.getElementById('joinError');
+  errEl.textContent = '';
+  if(code.length !== 4){ errEl.textContent = 'Enter a 4-digit code.'; return; }
   if(!requireBase44(errEl)) return;
 
-  const joinBtn = document.getElementById('joinBtn');
-  if(joinBtn){ joinBtn.disabled = true; joinBtn.textContent = 'CONNECTING...'; }
+  document.getElementById('joinBtn').disabled = true;
+  document.getElementById('joinBtn').textContent = 'CONNECTING...';
 
   leaveRoom();
   const myToken = connectToken; // leaveRoom() just bumped it — capture the new value
-  G.myFormation = joinFormation;
   G.mode = 'guest';
 
   let room;
@@ -1047,7 +1032,7 @@ async function joinRoom(){
     );
     if (myToken !== connectToken) return; // user backed out mid-lookup
     if (!rooms.length) {
-      if(errEl) errEl.textContent = 'Room not found. Check the code and try again.';
+      errEl.textContent = 'Room not found. Check the code and try again.';
       resetJoinBtn();
       return;
     }
@@ -1056,7 +1041,7 @@ async function joinRoom(){
   } catch (err) {
     console.error('Base44 room lookup error', err);
     if (myToken !== connectToken) return;
-    if(errEl) errEl.textContent = 'Could not reach matchmaking server: ' + describeError(err);
+    errEl.textContent = 'Could not reach matchmaking server: ' + describeError(err);
     resetJoinBtn();
     return;
   }
@@ -1067,7 +1052,7 @@ async function joinRoom(){
   localPeer.on('error', (err) => {
     console.error('PeerJS guest error', err);
     if (myToken !== connectToken) return;
-    if(errEl) errEl.textContent = 'Connection error: ' + describeError(err);
+    errEl.textContent = 'Connection error: ' + describeError(err);
     resetJoinBtn();
   });
 
@@ -1091,10 +1076,10 @@ function connectToHost(hostPeerId, code, myToken, attempt){
     if (settled || myToken !== connectToken) return;
     try{ conn.close(); }catch(e){}
     if (attempt < 3) {
-      if(errEl) errEl.textContent = 'Still trying to reach the host… (' + (attempt+1) + '/3)';
+      errEl.textContent = 'Still trying to reach the host… (' + (attempt+1) + '/3)';
       connectToHost(hostPeerId, code, myToken, attempt + 1);
     } else {
-      if(errEl) errEl.textContent = 'Could not reach host — check the code and that both players are online.';
+      errEl.textContent = 'Could not reach host — check the code and that both players are online.';
       resetJoinBtn();
     }
   }, 6000);
@@ -1108,8 +1093,8 @@ function connectToHost(hostPeerId, code, myToken, attempt){
     G.roomCode = code;
     G.connected = true;
     updateConnBadge();
-    if(errEl) errEl.textContent = '';
-    send({type:'JOIN', name:G.username, formation:joinFormation});
+    errEl.textContent = '';
+    send({type:'JOIN', name:G.username});
     // Best-effort record-keeping — the P2P link is already live, so this
     // doesn't gate anything and failures here are non-fatal.
     if (activeRoomId && base44) {
@@ -1117,7 +1102,6 @@ function connectToHost(hostPeerId, code, myToken, attempt){
         guestName: G.username, status: 'active'
       }).catch(()=>{});
     }
-    showScreen('draftScreen');
   });
 
   conn.on('error', (err) => {
@@ -1129,29 +1113,29 @@ function connectToHost(hostPeerId, code, myToken, attempt){
 
 function resetJoinBtn(){
   const btn = document.getElementById('joinBtn');
-  if(!btn) return;
-  btn.textContent = 'JOIN GAME';
+  btn.disabled = false;
+  btn.textContent = 'Join Room';
   checkJoinReady();
 }
 
 function showGuestLobby(){
+  showScreen('lobbyScreen');
   document.getElementById('lobbyCode').textContent = G.roomCode || '–';
   document.getElementById('slotName0').textContent = G.oppUsername;
   document.getElementById('slot0').classList.add('filled');
   document.getElementById('slotName1').textContent = G.username;
   document.getElementById('slot1').classList.add('filled');
   document.getElementById('lobbyStartBtn').style.display = 'none';
-  document.getElementById('lobbyFormationRow').style.display = 'none';
+  document.getElementById('lobbySportRow').style.display = 'none';
+  document.getElementById('lobbySportHeading').style.display = 'none';
   setLobbyStatus('waiting', 'Waiting for host to start the draft...');
-  showScreen('lobbyScreen');
 }
 
 function leaveJoinScreen(){
   document.getElementById('joinCodeInput').value = '';
   document.getElementById('joinError').textContent = '';
-  document.getElementById('joinFormationRow').querySelectorAll('.form-btn').forEach(b=>b.classList.remove('selected'));
-  joinFormation = '';
   document.getElementById('joinBtn').disabled = true;
+  document.getElementById('joinBtn').textContent = 'Join Room';
   leaveRoom();
   showScreen('homeScreen');
 }
@@ -1162,25 +1146,20 @@ function goHome(){
 }
 
 // Shared by goHome() (leaving voluntarily) and the ROOM_CLOSED handler
-// (opponent left) so both paths reset the exact same state and UI —
-// previously ROOM_CLOSED skipped this, leaving stale inline styles
-// (hidden formation row/start button) for the next lobby visit.
+// (opponent left) so both paths reset the exact same state and UI.
 function resetToHomeScreen(){
   leaveRoom();
-  selectedMode = ''; lobbyFormation = ''; joinFormation = '';
-  G = {username:G.username, mode:'', roomCode:'', myFormation:'', oppFormation:'', oppUsername:'',
-    positions:[], pickedPlayers:[], usedNames:new Set(), lockedChoices:{},
-    totalRating:0, selectedLeagues:[], activeSlot:null, activeFilter:null,
-    draftDone:false, oppDraftDone:false, oppCount:0, oppPicks:null, connected:false};
+  selectedMode = '';
+  G = {username:G.username, mode:'', roomCode:'', sport:'', oppUsername:'', oppSport:'',
+    lineup:[], oppLineup:null, oppCount:0,
+    draftDone:false, oppDraftDone:false, connected:false};
   document.getElementById('ccHost').classList.remove('selected');
   document.getElementById('ccJoin').classList.remove('selected');
   document.getElementById('homeNextBtn').disabled = true;
   document.getElementById('homeError').textContent = '';
   document.getElementById('lobbyStartBtn').style.display = '';
-  document.getElementById('lobbyFormationRow').style.display = '';
-  document.querySelectorAll('#lobbyScreen > [style]').forEach(el=>{
-    if(el.textContent.trim().includes('Choose Your Formation')) el.style.display = '';
-  });
+  document.getElementById('lobbySportRow').style.display = '';
+  document.getElementById('lobbySportHeading').style.display = '';
   showScreen('homeScreen');
 }
 
@@ -1193,267 +1172,216 @@ function handleDisconnect(){
     goHome();
   }
 }
-
 // ═══════════════════════════════════════════════
-//  DRAFT INIT
+//  DRAFT — deck building & flow control
 // ═══════════════════════════════════════════════
-function initDraft(){
-  const f = FORMATIONS[G.myFormation];
-  G.positions = [...f.positions];
-  G.pickedPlayers = new Array(11).fill(null);
-  G.usedNames = new Set();
-  G.lockedChoices = {};
-  G.totalRating = 0; G.selectedLeagues = [];
-  G.activeSlot = null; G.activeFilter = null;
-  G.draftDone = false; G.oppDraftDone = false; G.oppCount = 0; G.oppPicks = null;
-
-  document.getElementById('selPanel').innerHTML = `
-    <div class="sp-header">
-      <div class="sp-title" id="spTitle">Select a Position</div>
-      <div class="sp-pos" id="spPos">–</div>
-      <div class="sp-hint" id="spHint">Tap any glowing slot on the pitch</div>
-    </div>
-    <div id="spContent" class="sp-cards">
-      <div class="sp-idle"><div class="idle-icon">⚽</div><p>Click any glowing slot<br>on the pitch to pick a player</p></div>
-    </div>`;
-
+function startDraftingUI(){
+  G.lineup = [];
+  G.oppCount = 0;
+  G.oppDraftDone = false;
+  G.oppLineup = null;
+  G.draftDone = false;
+  document.getElementById('draftTarget').textContent = LINEUP_SIZE;
   document.getElementById('draftFilled').textContent = '0';
-  document.getElementById('oppProgressLabel').textContent = G.oppUsername + ': 0/11';
-
+  document.getElementById('oppProgressLabel').textContent = (G.oppUsername||'Opponent') + ': 0/' + LINEUP_SIZE;
+  renderLineup();
   showScreen('draftScreen');
-  requestAnimationFrame(buildPitch);
+  buildDeck();
 }
 
-// ═══════════════════════════════════════════════
-//  PITCH
-// ═══════════════════════════════════════════════
-function buildPitch(){
-  const container = document.getElementById('pitchSlots');
-  container.innerHTML = '';
-  FORMATIONS[G.myFormation].coords.forEach((coord, i)=>{
-    const div = document.createElement('div');
-    div.className = 'pslot available';
-    div.id = 'pslot_' + i;
-    div.style.left = coord[0] + '%';
-    div.style.top  = coord[1] + '%';
-    div.innerHTML = `<div class="pslot-img" id="pslotImg_${i}"><span class="pos-text">${G.positions[i]}</span></div>`;
-    div.title = G.positions[i];
-    div.onclick = ()=>openSlot(i);
-    container.appendChild(div);
-  });
+function buildDeck(){
+  const pool = G.sport === 'basketball' ? BASKETBALL_PLAYERS : FOOTBALL_PLAYERS;
+  deck = shuffle(pool);
+  showNextCard();
 }
 
-// ═══════════════════════════════════════════════
-//  SLOT SELECTION
-// ═══════════════════════════════════════════════
-function openSlot(idx){
-  if(G.draftDone) return;
-  if(G.pickedPlayers[idx] !== null) return;
-  G.activeSlot = idx;
-  G.activeFilter = null;
-  for(let i=0;i<11;i++){
-    const s = document.getElementById('pslot_'+i);
-    if(!s) continue;
-    if(G.pickedPlayers[i]!==null) s.className='pslot filled';
-    else if(i===idx)              s.className='pslot active';
-    else                          s.className='pslot available';
-  }
-  const pos = G.positions[idx];
-  document.getElementById('spTitle').textContent = 'Pick your ' + pos;
-  document.getElementById('spPos').textContent   = pos;
-  document.getElementById('spHint').textContent  = 'Choose one player for this slot';
-
-  if(G.lockedChoices[idx]){
-    renderCards(G.lockedChoices[idx]);
-  } else {
-    const offeredElsewhere = new Set();
-    Object.entries(G.lockedChoices).forEach(([slotIdx, pool])=>{
-      if(Number(slotIdx) !== idx) pool.forEach(p=>offeredElsewhere.add(p.name));
-    });
-    const pool = shuffle(PLAYERS.filter(p=>
-      p.pos===pos &&
-      !G.usedNames.has(p.name) &&
-      !offeredElsewhere.has(p.name)
-    )).slice(0,4);
-    G.lockedChoices[idx] = pool;
-    renderCards(pool);
-  }
+function showNextCard(){
+  faceUp = deck[0] || null;
+  renderDeckArea();
+  startPickTimer();
 }
 
-function renderCards(players){
-  const content = document.getElementById('spContent');
-  content.className = 'sp-cards';
-  if(!players.length){ content.innerHTML='<div class="sp-idle"><p>No players match</p></div>'; return; }
-  content.innerHTML = players.map(p=>`
-    <div class="pick-card" onclick="pickPlayer('${p.name.replace(/'/g,"\\'")}')">
-      <img class="pick-card-img" src="${getImgUrl(p.img)}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='0.3'">
-    </div>`).join('');
+// Click the face-up card: discard it forever, reveal the next one. Locked
+// once only one card remains, so you can never flip the deck to empty
+// without having picked anything.
+function flipCard(){
+  if(G.draftDone || deck.length<=1) return;
+  deck.shift();
+  showNextCard();
 }
 
-// ═══════════════════════════════════════════════
-//  PICK PLAYER
-// ═══════════════════════════════════════════════
-function pickPlayer(name){
-  if(G.activeSlot === null) return;
-  const player = PLAYERS.find(p=>p.name===name);
-  if(!player) return;
-  const idx = G.activeSlot;
-  G.pickedPlayers[idx] = player;
-  G.usedNames.add(name);
-  G.totalRating += player.rating;
-  G.selectedLeagues.push(player.league);
-  G.activeSlot = null; G.activeFilter = null;
+// Lock in the current face-up card.
+function selectCard(){
+  if(G.draftDone || !faceUp) return;
+  clearPickTimer();
+  const player = deck.shift();
+  addToLineup(player);
+}
 
-  document.getElementById('pslot_'+idx).className = 'pslot filled';
-  document.getElementById('pslot_'+idx).title = player.name;
-  document.getElementById('pslotImg_'+idx).innerHTML = `<img src="${getImgUrl(player.img)}" alt="${player.name}" onerror="this.style.opacity='0.3'">`;
+// Lock in a uniformly random card from whatever's left in the deck
+// (could still be the one currently face-up).
+function chooseRandom(){
+  if(G.draftDone || deck.length===0) return;
+  clearPickTimer();
+  const idx = Math.floor(Math.random()*deck.length);
+  const player = deck.splice(idx,1)[0];
+  addToLineup(player);
+}
 
-  document.getElementById('draftFilled').textContent = G.pickedPlayers.filter(Boolean).length;
+function trimPlayer(p){ return {name:p.name, pos:p.pos, rating:p.rating, img:p.img}; }
 
-  const remaining = G.pickedPlayers.filter(p=>p===null).length;
-  send({type:'PICK_UPDATE', count: G.pickedPlayers.filter(Boolean).length, done:false});
-
-  if(remaining === 0){
+function addToLineup(player){
+  G.lineup.push(player);
+  renderLineup();
+  document.getElementById('draftFilled').textContent = G.lineup.length;
+  const done = G.lineup.length >= LINEUP_SIZE;
+  send({type:'PICK_UPDATE', count:G.lineup.length, done, picks: done ? G.lineup.map(trimPlayer) : undefined});
+  if(done){
     G.draftDone = true;
-    send({type:'PICK_UPDATE', count:11, done:true, picks: G.pickedPlayers.map(p=>p?{name:p.name,pos:p.pos,rating:p.rating,img:p.img,league:p.league}:null)});
-    document.getElementById('selPanel').innerHTML = `
-      <div class="waiting-overlay">
-        <div class="spinner"></div>
-        <h3>Squad Complete!</h3>
-        <p>Waiting for ${G.oppUsername} to finish...</p>
-      </div>`;
+    clearPickTimer();
+    faceUp = null;
+    renderDeckArea();
     checkBothDone();
   } else {
-    document.getElementById('spContent').innerHTML='<div class="sp-idle"><div class="idle-icon">⚽</div><p>Pick another slot on the pitch</p></div>';
-    document.getElementById('spTitle').textContent='Select a Position';
-    document.getElementById('spPos').textContent='–';
-    document.getElementById('spHint').textContent='Tap any glowing slot';
-    for(let i=0;i<11;i++){
-      if(G.pickedPlayers[i]===null) document.getElementById('pslot_'+i).className='pslot available';
-    }
+    showNextCard();
   }
+}
+
+function startPickTimer(){
+  clearPickTimer();
+  if(G.draftDone || !faceUp) return;
+  timeLeft = PICK_SECONDS;
+  pickTimer = setInterval(()=>{
+    timeLeft--;
+    const el = document.getElementById('deckTimer');
+    if(el){ el.textContent = timeLeft; el.classList.toggle('low', timeLeft<=5); }
+    if(timeLeft<=0){
+      clearPickTimer();
+      chooseRandom(); // ran out of time — auto-pick, same as the button
+    }
+  }, 1000);
+}
+function clearPickTimer(){ if(pickTimer){ clearInterval(pickTimer); pickTimer=null; } }
+
+function renderDeckArea(){
+  const wrap = document.getElementById('deckWrap');
+  if(G.draftDone){
+    wrap.innerHTML = `
+      <div class="deck-waiting">
+        <div class="spinner"></div>
+        <h3>Lineup Complete!</h3>
+        <p style="font-size:0.85rem;color:var(--muted)">Waiting for ${G.oppUsername||'opponent'} to finish drafting...</p>
+      </div>`;
+    return;
+  }
+  if(!faceUp){
+    wrap.innerHTML = `<div class="deck-empty"><h3>Deck Empty</h3><p>Something went wrong — please refresh.</p></div>`;
+    return;
+  }
+  const isLast = deck.length <= 1;
+  wrap.innerHTML = `
+    <div class="deck-timer" id="deckTimer">${timeLeft}</div>
+    <div class="deck-card" id="deckCardEl" ${isLast ? '' : 'onclick="flipCard()"'}>
+      <img src="${getImgUrl(faceUp.img)}" alt="${faceUp.name}" onerror="this.style.opacity='0.3'">
+      <div class="dc-name">${faceUp.name} · ${faceUp.pos} · ${faceUp.rating}</div>
+      ${isLast ? '' : '<div class="dc-flip-hint">Tap to flip</div>'}
+    </div>
+    <div class="deck-count">${deck.length} card${deck.length===1?'':'s'} left in deck</div>
+    <div class="deck-actions">
+      <button class="btn btn-outline" onclick="selectCard()">Select</button>
+      <button class="btn btn-elec" onclick="chooseRandom()">Choose Random</button>
+    </div>
+  `;
+}
+
+function renderLineup(){
+  const list = document.getElementById('lineupList');
+  let html = '';
+  G.lineup.forEach(p=>{
+    html += `<div class="lineup-item"><img src="${getImgUrl(p.img)}" alt="${p.name}" onerror="this.style.opacity='0.3'"><div><div class="li-name">${p.name}</div><div class="li-sub">${p.pos} · ${p.rating}</div></div></div>`;
+  });
+  for(let i=G.lineup.length; i<LINEUP_SIZE; i++){
+    html += `<div class="lineup-empty-slot">Pick #${i+1}</div>`;
+  }
+  list.innerHTML = html;
+  document.getElementById('lineupCount').textContent = G.lineup.length + ' / ' + LINEUP_SIZE;
 }
 
 function handleOppPickUpdate(data){
   G.oppCount = data.count;
-  document.getElementById('oppProgressLabel').textContent = G.oppUsername + ': ' + data.count + '/11';
+  document.getElementById('oppProgressLabel').textContent = (G.oppUsername||'Opponent') + ': ' + data.count + '/' + LINEUP_SIZE;
   if(data.done){
     G.oppDraftDone = true;
-    if(data.picks) G.oppPicks = data.picks;
+    G.oppLineup = data.picks || null;
     checkBothDone();
   }
 }
 
+// ═══════════════════════════════════════════════
+//  RESULT
+// ═══════════════════════════════════════════════
 function checkBothDone(){
-  if(!G.draftDone || !G.oppDraftDone) return;
+  if(!(G.draftDone && G.oppDraftDone)) return;
   if(G.mode === 'host'){
-    const my = calcScore(G.pickedPlayers, G.selectedLeagues);
-    const opp = G.oppPicks ? calcScore(G.oppPicks) : {avg:85,chem:0,total:85};
-    const goals = scoreToGoals(my.total, opp.total);
-    send({type:'RESULT', hostScore:my, guestScore:opp, hostGoals:goals.a, guestGoals:goals.b});
-    setTimeout(()=>showResult(goals, my, opp), 800);
+    const myTotal = G.lineup.reduce((s,p)=>s+p.rating,0);
+    const oppTotal = (G.oppLineup||[]).reduce((s,p)=>s+p.rating,0);
+    const {hostScore, guestScore} = simulateMatch(myTotal, oppTotal, G.sport);
+    send({type:'RESULT', hostScore, guestScore, hostLineup:G.lineup.map(trimPlayer)});
+    showResult(hostScore, guestScore, G.lineup, G.oppLineup);
   }
+  // guest just waits for the RESULT message, handled in handleIncoming
 }
 
-// ═══════════════════════════════════════════════
-//  SCORING
-// ═══════════════════════════════════════════════
-function calcScore(picks, leagues){
-  const filled = picks.filter(Boolean);
-  if(!filled.length) return {avg:80,chem:0,total:80};
-  const avg = filled.reduce((s,p)=>s+p.rating,0)/filled.length;
-  const counts={};
-  (leagues||filled.map(p=>p.league)).forEach(l=>counts[l]=(counts[l]||0)+1);
-  let chem=0;
-  Object.values(counts).forEach(c=>{if(c>=5)chem+=5;else if(c>=3)chem+=2;});
-  return {avg:Math.round(avg), chem, total:Math.round(avg+chem)};
-}
-
-function scoreToGoals(a,b){
-  const diff=a-b;
-  if(diff===0){const g=[0,0,1,1,1,2,2,3][Math.floor(Math.random()*8)];return{a:g,b:g};}
-  const abs=Math.abs(diff);let w,l;
-  if(abs<=2){w=ri(1,2);l=w-1;}else if(abs<=5){w=ri(2,3);l=ri(0,1);}
-  else if(abs<=10){w=ri(3,4);l=ri(0,1);}else{w=ri(4,5);l=0;}
-  return diff>0?{a:Math.min(w,5),b:Math.min(l,w-1)}:{a:Math.min(l,w-1),b:Math.min(w,5)};
-}
-function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
-
-// ═══════════════════════════════════════════════
-//  RESULT — mini pitch visualization for both squads
-// ═══════════════════════════════════════════════
-const MINI_PITCH_LINES = `
-  <svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="3" y="2" width="94" height="96" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
-    <line x1="3" y1="50" x2="97" y2="50" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
-    <circle cx="50" cy="50" r="10" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="0.4"/>
-    <rect x="25" y="2" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-    <rect x="25" y="80" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-  </svg>`;
-
-function buildMiniPitch(formationKey, picks){
-  const f = FORMATIONS[formationKey] || FORMATIONS['4-3-3'];
-  const slots = f.coords.map((coord, i)=>{
-    const p = picks[i];
-    if(!p) return '';
-    return `<div class="rp-slot" style="left:${coord[0]}%;top:${coord[1]}%">
-      <img src="${getImgUrl(p.img)}" alt="${p.name}" onerror="this.style.opacity='0.3'">
-    </div>`;
-  }).join('');
-  return `<div class="result-pitch">${MINI_PITCH_LINES}${slots}</div>`;
-}
-
-function showResult(goals, my, opp){
-  const trophy = document.getElementById('resultTrophy');
-  const sub = document.getElementById('resultSub');
-  if(goals.a > goals.b){
-    trophy.textContent = G.username + ' Wins!';
-    trophy.className = 'result-trophy win';
-    sub.textContent = 'Incredible squad building!';
-  } else if(goals.a < goals.b){
-    trophy.textContent = G.oppUsername + ' Wins!';
-    trophy.className = 'result-trophy';
-    trophy.style.color = 'var(--muted2)';
-    sub.textContent = 'Better luck next time.';
+// Simple strength-comparison sim: total rating advantage skews a
+// randomized final score toward whoever drafted better, without making
+// it fully deterministic. Tune freely later.
+function simulateMatch(hostTotal, guestTotal, sport){
+  const denom = (hostTotal + guestTotal) || 1;
+  const strengthDiff = (hostTotal - guestTotal) / denom; // roughly -1..1
+  if(sport === 'basketball'){
+    const base = 95, swing = 18;
+    let hostScore = Math.round(base + strengthDiff*swing + (Math.random()*10-5));
+    let guestScore = Math.round(base - strengthDiff*swing + (Math.random()*10-5));
+    hostScore = Math.max(60, hostScore);
+    guestScore = Math.max(60, guestScore);
+    return {hostScore, guestScore};
   } else {
-    trophy.textContent = 'Draw!';
-    trophy.className = 'result-trophy draw';
-    sub.textContent = 'Evenly matched squads.';
+    const base = 2, swing = 2.2;
+    const hostScore = Math.max(0, Math.round(base + strengthDiff*swing + (Math.random()*1.4-0.7)));
+    const guestScore = Math.max(0, Math.round(base - strengthDiff*swing + (Math.random()*1.4-0.7)));
+    return {hostScore, guestScore};
   }
+}
 
-  document.getElementById('r_myName').textContent = G.username;
-  document.getElementById('r_oppName').textContent = G.oppUsername;
-  document.getElementById('r_myGoals').textContent = goals.a;
-  document.getElementById('r_oppGoals').textContent = goals.b;
-  document.getElementById('r_ovr').textContent = my.avg;
-  document.getElementById('r_chem').textContent = '+'+my.chem;
-  document.getElementById('r_score').textContent = my.total;
-  document.getElementById('r_opp_score').textContent = opp.total;
-
-  const myPitch = buildMiniPitch(G.myFormation, G.pickedPlayers);
-  const oppPitch = G.oppPicks ? buildMiniPitch(G.oppFormation || '4-3-3', G.oppPicks) : '<div style="color:var(--muted);padding:1rem;text-align:center">Squad data unavailable</div>';
-  document.getElementById('resultPitches').innerHTML =
-    `<div class="result-pitch-block"><div class="rp-header">${G.username} (${G.myFormation})</div>${myPitch}</div>`
-    + `<div class="result-pitch-block"><div class="rp-header">${G.oppUsername} (${G.oppFormation||'–'})</div>${oppPitch}</div>`;
-
+function showResult(meScore, oppScore, meLineup, oppLineup){
+  clearPickTimer();
+  const trophy = document.getElementById('resultTrophy');
+  if(meScore > oppScore){ trophy.textContent = 'VICTORY'; trophy.className = 'result-trophy win'; }
+  else if(meScore < oppScore){ trophy.textContent = 'DEFEAT'; trophy.className = 'result-trophy'; }
+  else { trophy.textContent = 'DRAW'; trophy.className = 'result-trophy draw'; }
+  document.getElementById('resultMeName').textContent = G.username;
+  document.getElementById('resultOppName').textContent = G.oppUsername || 'Opponent';
+  document.getElementById('resultMeScore').textContent = meScore;
+  document.getElementById('resultOppScore').textContent = oppScore;
+  document.getElementById('resultMeScore').classList.toggle('hi', meScore >= oppScore);
+  document.getElementById('resultOppScore').classList.toggle('hi', oppScore > meScore);
+  document.getElementById('resultMeHeader').textContent = G.username + "'s Squad";
+  document.getElementById('resultOppHeader').textContent = (G.oppUsername||'Opponent') + "'s Squad";
+  renderRosterGrid('resultMeGrid', meLineup);
+  renderRosterGrid('resultOppGrid', oppLineup || []);
   showScreen('resultScreen');
 }
 
-function playAgain(){
-  if(G.mode === 'host'){
-    send({type:'PLAY_AGAIN', hostFormation: G.myFormation});
-    initDraft();
-  } else {
-    showScreen('lobbyScreen');
-    document.getElementById('lobbyStartBtn').style.display = 'none';
-    document.getElementById('lobbyFormationRow').style.display = 'none';
-    setLobbyStatus('waiting', 'Waiting for host to start a new game...');
-  }
+function renderRosterGrid(elId, lineupArr){
+  document.getElementById(elId).innerHTML = (lineupArr||[]).map(p=>
+    `<img src="${getImgUrl(p.img)}" alt="${p.name}" title="${p.name} (${p.pos} \u00b7 ${p.rating})" onerror="this.style.opacity='0.3'">`
+  ).join('');
 }
 
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-document.getElementById('usernameInput').addEventListener('keydown',e=>{if(e.key==='Enter')homeNext();});
-document.getElementById('joinCodeInput').addEventListener('keydown',e=>{if(e.key==='Enter')joinRoom();});
+function playAgain(){
+  send({type:'PLAY_AGAIN', sport:G.sport});
+  startDraftingUI();
+}
 </script>
 </body>
 </html>
