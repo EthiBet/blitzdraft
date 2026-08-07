@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Blitz Draft</title>
+<title>BlitzDraft</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -122,9 +122,17 @@ input[type=text]::placeholder{color:var(--muted)}
 /* DECK CARD */
 .deck-timer{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--elec);background:var(--s2);border:2.5px solid var(--border2);border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;position:absolute;top:1.2rem;right:1.2rem;transition:color .2s,border-color .2s;z-index:5}
 .deck-timer.low{color:var(--red);border-color:var(--red);animation:pdot 0.6s ease-in-out infinite}
-.deck-card{width:min(300px,72vw);aspect-ratio:640/898;border-radius:16px;overflow:hidden;cursor:pointer;position:relative;background:var(--s2);border:2px solid var(--border2);box-shadow:0 10px 40px rgba(0,224,255,0.18);transition:transform .15s,border-color .15s}
-.deck-card:hover{transform:translateY(-4px);border-color:var(--elec)}
-.deck-card img{width:100%;height:100%;object-fit:cover;display:block}
+.turn-banner{position:absolute;top:1.2rem;left:1.2rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;padding:6px 14px;border-radius:20px;z-index:5}
+.turn-banner.mine{background:var(--elec-dim);color:var(--elec);border:1px solid var(--border2)}
+.turn-banner.theirs{background:var(--s2);color:var(--muted2);border:1px solid var(--border)}
+.deck-card-stage{perspective:1200px}
+.deck-card{width:min(300px,72vw);aspect-ratio:640/898;border-radius:16px;overflow:hidden;cursor:pointer;position:relative;background:var(--s2);border:2px solid var(--border2);box-shadow:0 10px 40px rgba(0,224,255,0.18);transform-style:preserve-3d;transition:transform 0.16s ease-in,border-color .15s}
+.deck-card:hover{border-color:var(--elec)}
+.deck-card.spectator{cursor:default}
+.deck-card.spectator:hover{border-color:var(--border2)}
+.deck-card.flip-out{transform:rotateY(90deg) scale(0.92)}
+.deck-card.flip-in{transform:rotateY(-90deg) scale(0.92);transition:none}
+.deck-card img{width:100%;height:100%;object-fit:cover;display:block;backface-visibility:hidden}
 .deck-card .dc-flip-hint{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,0.8),transparent);color:#fff;font-size:0.68rem;text-align:center;padding:10px 0 8px;letter-spacing:0.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif}
 .deck-card .dc-name{position:absolute;top:0;left:0;right:0;background:linear-gradient(180deg,rgba(0,0,0,0.75),transparent);color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.85rem;text-align:center;padding:8px 6px 16px}
 .deck-count{font-size:0.78rem;color:var(--muted2);letter-spacing:0.06em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
@@ -175,9 +183,9 @@ input[type=text]::placeholder{color:var(--muted)}
 
 <!-- HOME -->
 <div id="homeScreen" class="screen active">
-  <div class="logo-mark"><img src="logo.png" alt="BlitzDraft"></div>
+  <div class="logo-mark"><img src="logo.jpg" alt="BlitzDraft"></div>
   <div class="game-title">BlitzDraft</div>
-  <div class="game-tagline">Flip. Pick. Build The Squad.</div>
+  <div class="game-tagline">Flip. Pick. Build Your Squad.</div>
   <div class="input-wrap">
     <label>Your Name</label>
     <input type="text" id="usernameInput" placeholder="Enter your name..." maxlength="16" autocomplete="off">
@@ -230,7 +238,7 @@ input[type=text]::placeholder{color:var(--muted)}
 <!-- JOIN SCREEN -->
 <div id="joinScreen" class="screen">
   <button class="back-btn" onclick="leaveJoinScreen()">← Back</button>
-  <div class="logo-mark" style="width:44px;height:44px;margin-bottom:0.8rem"><img src="logo.png" alt="BlitzDraft"></div>
+  <div class="logo-mark" style="width:44px;height:44px;margin-bottom:0.8rem"><img src="logo.jpg" alt="BlitzDraft"></div>
   <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--elec);margin-bottom:1.5rem">Join a Room</div>
   <div class="input-wrap">
     <label>Room Code</label>
@@ -245,9 +253,9 @@ input[type=text]::placeholder{color:var(--muted)}
   <div class="draft-top-bar">
     <div class="dtb-left">
       <div class="dtb-title">BlitzDraft</div>
-      <div class="progress-pill">You: <span id="draftFilled">0</span>/<span id="draftTarget">8</span></div>
+      <div class="progress-pill">You: <span id="draftFilled">0</span>/<span id="draftTarget">11</span></div>
     </div>
-    <div class="opp-pill"><span class="opp-dot live" id="oppDot"></span><span id="oppProgressLabel">Opponent: 0/8</span></div>
+    <div class="opp-pill"><span class="opp-dot live" id="oppDot"></span><span id="oppProgressLabel">Opponent: 0/11</span></div>
   </div>
   <div class="draft-body">
     <div class="deck-wrap" id="deckWrap">
@@ -255,8 +263,8 @@ input[type=text]::placeholder{color:var(--muted)}
     </div>
     <div class="lineup-panel">
       <div class="lineup-header">
-        <div class="lineup-title">Your Lineup</div>
-        <div class="lineup-count" id="lineupCount">0 / 8</div>
+        <div class="lineup-title" id="lineupHeaderLabel">Your Lineup</div>
+        <div class="lineup-count" id="lineupCount">0 / 11</div>
       </div>
       <div class="lineup-list" id="lineupList"></div>
     </div>
@@ -675,10 +683,70 @@ function shuffle(arr){
   return a;
 }
 
-// How many picks make a complete lineup. Same number regardless of sport
-// for now — easy to split into separate football/basketball targets later.
-const LINEUP_SIZE = 8;
 const PICK_SECONDS = 15;
+
+// Only the position breakdown matters here (no pitch diagram in BlitzDraft),
+// reused from Apex XI so the two stay consistent.
+const FORMATIONS_POS = {
+  '4-3-3':['GK','LW','ST','RW','CM','CM','CM','LB','CB','CB','RB'],
+  '4-4-2':['GK','ST','ST','LM','CM','CM','RM','LB','CB','CB','RB'],
+  '4-2-3-1':['GK','ST','LM','CAM','RM','CDM','CDM','LB','CB','CB','RB'],
+  '4-1-2-1-2':['GK','ST','ST','CAM','CM','CM','CDM','LB','CB','CB','RB'],
+  '4-4-1-1':['GK','ST','CAM','LM','CM','CM','RM','LB','CB','CB','RB'],
+  '3-4-3':['GK','LW','ST','RW','LM','CM','CM','RM','CB','CB','CB'],
+  '3-5-2':['GK','ST','ST','LM','CDM','CM','CAM','RM','CB','CB','CB'],
+  '5-4-1':['GK','ST','LM','CM','CM','RM','LB','CB','CB','CB','RB'],
+  '5-2-1-2':['GK','ST','ST','CAM','CM','CM','LB','CB','CB','CB','RB'],
+  '4-5-1':['GK','ST','LM','CM','CM','CM','RM','LB','CB','CB','RB']
+};
+// Tally each formation once at load: {'4-3-3': {GK:1,LW:1,ST:1,...}, ...}
+const FORMATION_COUNTS = {};
+for(const key in FORMATIONS_POS){
+  const counts = {};
+  FORMATIONS_POS[key].forEach(p => counts[p] = (counts[p]||0) + 1);
+  FORMATION_COUNTS[key] = counts;
+}
+const FOOTBALL_TARGET = 11; // every formation above totals 11 outfield+GK
+const BASKETBALL_STARTER_ORDER = ['PG','SG','SF','PF','C'];
+const BASKETBALL_TARGET = 13; // 5 starters (fixed order) + 8 bench (open pool)
+
+function targetForSport(sport){ return sport === 'basketball' ? BASKETBALL_TARGET : FOOTBALL_TARGET; }
+
+// A formation is still reachable if none of the positions picked so far
+// exceed what that formation actually needs.
+function viableFormations(pickedCounts){
+  return Object.keys(FORMATION_COUNTS).filter(key=>{
+    const req = FORMATION_COUNTS[key];
+    for(const pos in pickedCounts){
+      if(pickedCounts[pos] > (req[pos]||0)) return false;
+    }
+    return true;
+  });
+}
+// Which positions are still worth offering, given every formation that
+// could still be completed from the picks made so far. The very first
+// pick is always forced to GK regardless of this (every formation needs
+// exactly one, so it never changes viability either way).
+function allowedFootballPositions(myLineup){
+  if(myLineup.length === 0) return ['GK'];
+  const pickedCounts = {};
+  myLineup.forEach(p => pickedCounts[p.pos] = (pickedCounts[p.pos]||0) + 1);
+  const viable = viableFormations(pickedCounts);
+  const allowed = new Set();
+  viable.forEach(key=>{
+    const req = FORMATION_COUNTS[key];
+    for(const pos in req){
+      if((pickedCounts[pos]||0) < req[pos]) allowed.add(pos);
+    }
+  });
+  return [...allowed];
+}
+// Basketball: first 5 picks are a fixed PG→SG→SF→PF→C sequence, then the
+// remaining 8 (bench) are open to any position.
+function allowedBasketballPositions(myLineup){
+  if(myLineup.length < 5) return [BASKETBALL_STARTER_ORDER[myLineup.length]];
+  return null; // null = no restriction
+}
 // ═══════════════════════════════════════════════
 //  MULTIPLAYER BACKEND
 //  Base44 is used ONLY as a headless matchmaking database (the same
@@ -751,10 +819,19 @@ let selectedMode = '';
 let G = {
   username:'', mode:'', roomCode:'',
   sport:'', oppUsername:'', oppSport:'',
-  lineup:[], oppLineup:null, oppCount:0,
-  draftDone:false, oppDraftDone:false,
+  hostLineup:[], guestLineup:[],
+  turnIndex:0, totalTurns:0,
   connected:false
 };
+
+// This player's own deck-consumption state — persists across their turns
+// within one draft (reset at draft start), never sent over the wire.
+let myUsedNames = new Set();
+
+// The live broadcast of whoever's turn it currently is (mirrored on the
+// spectating side so their screen shows the active player's deck in
+// real time, per spec).
+let specFaceUp = null, specDeckCount = 0, specTimeLeft = 0;
 
 // Deck-drafting runtime state (not synced — each player shuffles their own deck)
 let deck = [];
@@ -841,17 +918,30 @@ function handleIncoming(data){
     case 'START':
       if(G.mode === 'guest'){ G.sport = data.sport; startDraftingUI(); }
       break;
-    case 'PICK_UPDATE':
-      handleOppPickUpdate(data);
+    // Broadcast continuously by whoever's turn it currently is, so the
+    // other player's screen mirrors their deck/timer live.
+    case 'TURN_STATE':
+      specFaceUp = data.faceUp;
+      specDeckCount = data.deckCount;
+      specTimeLeft = data.timeLeft;
+      renderDeckArea();
+      break;
+    // Sent once, by whoever just finalized a pick, so both clients stay
+    // in lockstep on whose turn it is and what both lineups contain.
+    case 'PICK_MADE':
+      if(data.byWhom === 'host') G.hostLineup.push(data.player);
+      else G.guestLineup.push(data.player);
+      G.turnIndex = data.turnIndex;
+      renderTopBarProgress();
+      renderLineupPanel();
+      advanceTurn();
       break;
     case 'PLAY_AGAIN':
       G.sport = data.sport || G.sport;
       startDraftingUI();
       break;
     case 'RESULT':
-      if(G.mode === 'guest'){
-        showResult(data.guestScore, data.hostScore, G.lineup, data.hostLineup);
-      }
+      showResult(data.hostScore, data.guestScore);
       break;
     case 'ROOM_CLOSED':
       resetToHomeScreen();
@@ -1150,9 +1240,11 @@ function goHome(){
 function resetToHomeScreen(){
   leaveRoom();
   selectedMode = '';
+  clearPickTimer();
+  deck = []; faceUp = null; myUsedNames = new Set();
+  specFaceUp = null; specDeckCount = 0; specTimeLeft = 0;
   G = {username:G.username, mode:'', roomCode:'', sport:'', oppUsername:'', oppSport:'',
-    lineup:[], oppLineup:null, oppCount:0,
-    draftDone:false, oppDraftDone:false, connected:false};
+    hostLineup:[], guestLineup:[], turnIndex:0, totalTurns:0, connected:false};
   document.getElementById('ccHost').classList.remove('selected');
   document.getElementById('ccJoin').classList.remove('selected');
   document.getElementById('homeNextBtn').disabled = true;
@@ -1173,88 +1265,131 @@ function handleDisconnect(){
   }
 }
 // ═══════════════════════════════════════════════
-//  DRAFT — deck building & flow control
+//  DRAFT — turn-based deck drafting
+//
+//  Each player has their own private deck (never synced) that gets
+//  freshly filtered/reshuffled at the start of every one of their turns,
+//  based on the rules for the chosen sport. Turns strictly alternate
+//  host → guest → host..., tracked by G.turnIndex (even = host's turn,
+//  odd = guest's), which both clients keep in lockstep via PICK_MADE
+//  messages. Whoever's turn it ISN'T just watches a live mirror of the
+//  active player's screen via TURN_STATE broadcasts.
 // ═══════════════════════════════════════════════
+
 function startDraftingUI(){
-  G.lineup = [];
-  G.oppCount = 0;
-  G.oppDraftDone = false;
-  G.oppLineup = null;
-  G.draftDone = false;
-  document.getElementById('draftTarget').textContent = LINEUP_SIZE;
-  document.getElementById('draftFilled').textContent = '0';
-  document.getElementById('oppProgressLabel').textContent = (G.oppUsername||'Opponent') + ': 0/' + LINEUP_SIZE;
-  renderLineup();
+  G.hostLineup = [];
+  G.guestLineup = [];
+  G.turnIndex = 0;
+  G.totalTurns = targetForSport(G.sport) * 2;
+  myUsedNames = new Set();
+  specFaceUp = null; specDeckCount = 0; specTimeLeft = 0;
+  renderTopBarProgress();
+  renderLineupPanel();
   showScreen('draftScreen');
-  buildDeck();
+  beginTurn();
 }
 
-function buildDeck(){
-  const pool = G.sport === 'basketball' ? BASKETBALL_PLAYERS : FOOTBALL_PLAYERS;
+function isMyTurn(){
+  const activeSide = (G.turnIndex % 2 === 0) ? 'host' : 'guest';
+  return activeSide === G.mode;
+}
+
+function beginTurn(){
+  clearPickTimer();
+  if(G.turnIndex >= G.totalTurns){ handleDraftComplete(); return; }
+  renderLineupPanel();
+  if(isMyTurn()){
+    buildMyDeck();
+  } else {
+    specFaceUp = null; specDeckCount = 0; specTimeLeft = 0;
+    renderDeckArea(); // spectator view, waiting for the active player's first TURN_STATE
+  }
+}
+
+// ── Deck building for MY turn ──
+function buildMyDeck(){
+  const myLineup = G.mode === 'host' ? G.hostLineup : G.guestLineup;
+  let pool;
+  if(G.sport === 'basketball'){
+    const allowed = allowedBasketballPositions(myLineup);
+    pool = BASKETBALL_PLAYERS.filter(p => (allowed===null || allowed.includes(p.pos)) && !myUsedNames.has(p.name));
+  } else {
+    const allowed = allowedFootballPositions(myLineup);
+    pool = FOOTBALL_PLAYERS.filter(p => allowed.includes(p.pos) && !myUsedNames.has(p.name));
+  }
   deck = shuffle(pool);
-  showNextCard();
+  showNextCard(true);
 }
 
-function showNextCard(){
+function showNextCard(isFirstOfTurn){
   faceUp = deck[0] || null;
-  renderDeckArea();
+  renderDeckArea(!isFirstOfTurn); // animate the flip except for a turn's very first card
   startPickTimer();
+  broadcastTurnState();
+}
+
+function broadcastTurnState(){
+  send({type:'TURN_STATE', faceUp: faceUp ? trimPlayer(faceUp) : null, deckCount: deck.length, timeLeft});
 }
 
 // Click the face-up card: discard it forever, reveal the next one. Locked
 // once only one card remains, so you can never flip the deck to empty
 // without having picked anything.
 function flipCard(){
-  if(G.draftDone || deck.length<=1) return;
-  deck.shift();
-  showNextCard();
+  if(!isMyTurn() || deck.length<=1) return;
+  const gone = deck.shift();
+  myUsedNames.add(gone.name);
+  showNextCard(false);
 }
 
 // Lock in the current face-up card.
 function selectCard(){
-  if(G.draftDone || !faceUp) return;
-  clearPickTimer();
+  if(!isMyTurn() || !faceUp) return;
   const player = deck.shift();
-  addToLineup(player);
+  myUsedNames.add(player.name);
+  finalizePick(player);
 }
 
 // Lock in a uniformly random card from whatever's left in the deck
 // (could still be the one currently face-up).
 function chooseRandom(){
-  if(G.draftDone || deck.length===0) return;
-  clearPickTimer();
+  if(!isMyTurn() || deck.length===0) return;
   const idx = Math.floor(Math.random()*deck.length);
   const player = deck.splice(idx,1)[0];
-  addToLineup(player);
+  myUsedNames.add(player.name);
+  finalizePick(player);
 }
 
 function trimPlayer(p){ return {name:p.name, pos:p.pos, rating:p.rating, img:p.img}; }
 
-function addToLineup(player){
-  G.lineup.push(player);
-  renderLineup();
-  document.getElementById('draftFilled').textContent = G.lineup.length;
-  const done = G.lineup.length >= LINEUP_SIZE;
-  send({type:'PICK_UPDATE', count:G.lineup.length, done, picks: done ? G.lineup.map(trimPlayer) : undefined});
-  if(done){
-    G.draftDone = true;
-    clearPickTimer();
-    faceUp = null;
-    renderDeckArea();
-    checkBothDone();
-  } else {
-    showNextCard();
-  }
+function finalizePick(player){
+  clearPickTimer();
+  const trimmed = trimPlayer(player);
+  if(G.mode === 'host') G.hostLineup.push(trimmed);
+  else G.guestLineup.push(trimmed);
+  G.turnIndex++;
+  faceUp = null;
+  renderTopBarProgress();
+  renderLineupPanel();
+  send({type:'PICK_MADE', player: trimmed, byWhom: G.mode, turnIndex: G.turnIndex});
+  advanceTurn();
+}
+
+function advanceTurn(){
+  clearPickTimer();
+  if(G.turnIndex >= G.totalTurns){ handleDraftComplete(); return; }
+  beginTurn();
 }
 
 function startPickTimer(){
   clearPickTimer();
-  if(G.draftDone || !faceUp) return;
+  if(!isMyTurn() || !faceUp) return;
   timeLeft = PICK_SECONDS;
   pickTimer = setInterval(()=>{
     timeLeft--;
     const el = document.getElementById('deckTimer');
     if(el){ el.textContent = timeLeft; el.classList.toggle('low', timeLeft<=5); }
+    broadcastTurnState();
     if(timeLeft<=0){
       clearPickTimer();
       chooseRandom(); // ran out of time — auto-pick, same as the button
@@ -1263,73 +1398,142 @@ function startPickTimer(){
 }
 function clearPickTimer(){ if(pickTimer){ clearInterval(pickTimer); pickTimer=null; } }
 
-function renderDeckArea(){
+// ═══════════════════════════════════════════════
+//  RENDERING
+// ═══════════════════════════════════════════════
+function renderTopBarProgress(){
+  const target = targetForSport(G.sport);
+  document.getElementById('draftTarget').textContent = target;
+  document.getElementById('draftFilled').textContent = (G.mode==='host'?G.hostLineup.length:G.guestLineup.length);
+  const oppLen = G.mode==='host' ? G.guestLineup.length : G.hostLineup.length;
+  document.getElementById('oppProgressLabel').textContent = (G.oppUsername||'Opponent') + ': ' + oppLen + '/' + target;
+  const dot = document.getElementById('oppDot');
+  if(dot) dot.classList.toggle('live', !isMyTurn());
+}
+
+function renderDeckArea(animateFlip){
   const wrap = document.getElementById('deckWrap');
-  if(G.draftDone){
+
+  if(G.turnIndex >= G.totalTurns){
     wrap.innerHTML = `
       <div class="deck-waiting">
         <div class="spinner"></div>
-        <h3>Lineup Complete!</h3>
-        <p style="font-size:0.85rem;color:var(--muted)">Waiting for ${G.oppUsername||'opponent'} to finish drafting...</p>
+        <h3>Draft Complete!</h3>
+        <p style="font-size:0.85rem;color:var(--muted)">Simulating the match...</p>
       </div>`;
     return;
   }
-  if(!faceUp){
-    wrap.innerHTML = `<div class="deck-empty"><h3>Deck Empty</h3><p>Something went wrong — please refresh.</p></div>`;
+
+  if(isMyTurn()){
+    if(!faceUp){
+      wrap.innerHTML = `<div class="deck-empty"><h3>Deck Empty</h3><p>Something went wrong — please refresh.</p></div>`;
+      return;
+    }
+    const isLast = deck.length <= 1;
+    const cardHtml = `
+      <div class="turn-banner mine">Your Turn</div>
+      <div class="deck-timer" id="deckTimer">${timeLeft}</div>
+      <div class="deck-card-stage">
+        <div class="deck-card" id="deckCardEl" ${isLast ? '' : 'onclick="flipCard()"'}>
+          <img src="${getImgUrl(faceUp.img)}" alt="${faceUp.name}" onerror="this.style.opacity='0.3'">
+          <div class="dc-name">${faceUp.name} · ${faceUp.pos} · ${faceUp.rating}</div>
+          ${isLast ? '' : '<div class="dc-flip-hint">Tap to flip</div>'}
+        </div>
+      </div>
+      <div class="deck-count">${deck.length} card${deck.length===1?'':'s'} left in your deck</div>
+      <div class="deck-actions">
+        <button class="btn btn-outline" onclick="selectCard()">Select</button>
+        <button class="btn btn-elec" onclick="chooseRandom()">Choose Random</button>
+      </div>
+    `;
+    if(animateFlip && document.getElementById('deckCardEl')){
+      playFlipTransition(() => { wrap.innerHTML = cardHtml; settleNewCard(); });
+    } else {
+      wrap.innerHTML = cardHtml;
+      settleNewCard();
+    }
     return;
   }
-  const isLast = deck.length <= 1;
+
+  // Spectating — mirror whatever the active player last broadcast.
+  if(!specFaceUp){
+    wrap.innerHTML = `
+      <div class="deck-waiting">
+        <div class="spinner"></div>
+        <h3>${G.oppUsername || 'Opponent'}'s Turn</h3>
+        <p style="font-size:0.85rem;color:var(--muted)">Waiting for them to start picking...</p>
+      </div>`;
+    return;
+  }
   wrap.innerHTML = `
-    <div class="deck-timer" id="deckTimer">${timeLeft}</div>
-    <div class="deck-card" id="deckCardEl" ${isLast ? '' : 'onclick="flipCard()"'}>
-      <img src="${getImgUrl(faceUp.img)}" alt="${faceUp.name}" onerror="this.style.opacity='0.3'">
-      <div class="dc-name">${faceUp.name} · ${faceUp.pos} · ${faceUp.rating}</div>
-      ${isLast ? '' : '<div class="dc-flip-hint">Tap to flip</div>'}
+    <div class="turn-banner theirs">${G.oppUsername || 'Opponent'}'s Turn — Spectating</div>
+    <div class="deck-timer" id="deckTimer">${specTimeLeft}</div>
+    <div class="deck-card-stage">
+      <div class="deck-card spectator" id="deckCardEl">
+        <img src="${getImgUrl(specFaceUp.img)}" alt="${specFaceUp.name}" onerror="this.style.opacity='0.3'">
+        <div class="dc-name">${specFaceUp.name} · ${specFaceUp.pos} · ${specFaceUp.rating}</div>
+      </div>
     </div>
-    <div class="deck-count">${deck.length} card${deck.length===1?'':'s'} left in deck</div>
-    <div class="deck-actions">
-      <button class="btn btn-outline" onclick="selectCard()">Select</button>
-      <button class="btn btn-elec" onclick="chooseRandom()">Choose Random</button>
-    </div>
+    <div class="deck-count">${specDeckCount} card${specDeckCount===1?'':'s'} left in their deck</div>
   `;
 }
 
-function renderLineup(){
-  const list = document.getElementById('lineupList');
-  let html = '';
-  G.lineup.forEach(p=>{
-    html += `<div class="lineup-item"><img src="${getImgUrl(p.img)}" alt="${p.name}" onerror="this.style.opacity='0.3'"><div><div class="li-name">${p.name}</div><div class="li-sub">${p.pos} · ${p.rating}</div></div></div>`;
+// A lightweight 3D flip: the current card rotates edge-on (invisible),
+// the content swaps at that moment, then the new card rotates back into
+// view from the other side — reads as a single continuous flip rather
+// than an instant image swap.
+function playFlipTransition(swapContent){
+  const cardEl = document.getElementById('deckCardEl');
+  if(!cardEl){ swapContent(); return; }
+  cardEl.classList.add('flip-out');
+  setTimeout(swapContent, 160);
+}
+function settleNewCard(){
+  const newCardEl = document.getElementById('deckCardEl');
+  if(!newCardEl) return;
+  newCardEl.classList.add('flip-in');
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{ newCardEl.classList.remove('flip-in'); });
   });
-  for(let i=G.lineup.length; i<LINEUP_SIZE; i++){
-    html += `<div class="lineup-empty-slot">Pick #${i+1}</div>`;
-  }
-  list.innerHTML = html;
-  document.getElementById('lineupCount').textContent = G.lineup.length + ' / ' + LINEUP_SIZE;
 }
 
-function handleOppPickUpdate(data){
-  G.oppCount = data.count;
-  document.getElementById('oppProgressLabel').textContent = (G.oppUsername||'Opponent') + ': ' + data.count + '/' + LINEUP_SIZE;
-  if(data.done){
-    G.oppDraftDone = true;
-    G.oppLineup = data.picks || null;
-    checkBothDone();
+function renderLineupPanel(){
+  const activeIsMe = isMyTurn();
+  const arr = activeIsMe
+    ? (G.mode==='host' ? G.hostLineup : G.guestLineup)
+    : (G.mode==='host' ? G.guestLineup : G.hostLineup);
+  const label = activeIsMe ? 'Your Lineup' : ((G.oppUsername||'Opponent') + "'s Lineup");
+  const target = targetForSport(G.sport);
+
+  document.getElementById('lineupHeaderLabel').textContent = label;
+  document.getElementById('lineupCount').textContent = arr.length + ' / ' + target;
+
+  let html = '';
+  arr.forEach(p=>{
+    html += `<div class="lineup-item"><img src="${getImgUrl(p.img)}" alt="${p.name}" onerror="this.style.opacity='0.3'"><div><div class="li-name">${p.name}</div><div class="li-sub">${p.pos} · ${p.rating}</div></div></div>`;
+  });
+  for(let i=arr.length; i<target; i++){
+    html += `<div class="lineup-empty-slot">Pick #${i+1}</div>`;
   }
+  document.getElementById('lineupList').innerHTML = html;
 }
 
 // ═══════════════════════════════════════════════
 //  RESULT
 // ═══════════════════════════════════════════════
-function checkBothDone(){
-  if(!(G.draftDone && G.oppDraftDone)) return;
+function handleDraftComplete(){
+  clearPickTimer();
+  renderDeckArea();
   if(G.mode === 'host'){
-    const myTotal = G.lineup.reduce((s,p)=>s+p.rating,0);
-    const oppTotal = (G.oppLineup||[]).reduce((s,p)=>s+p.rating,0);
-    const {hostScore, guestScore} = simulateMatch(myTotal, oppTotal, G.sport);
-    send({type:'RESULT', hostScore, guestScore, hostLineup:G.lineup.map(trimPlayer)});
-    showResult(hostScore, guestScore, G.lineup, G.oppLineup);
+    const hostTotal = G.hostLineup.reduce((s,p)=>s+p.rating,0);
+    const guestTotal = G.guestLineup.reduce((s,p)=>s+p.rating,0);
+    const {hostScore, guestScore} = simulateMatch(hostTotal, guestTotal, G.sport);
+    send({type:'RESULT', hostScore, guestScore});
+    showResult(hostScore, guestScore);
   }
-  // guest just waits for the RESULT message, handled in handleIncoming
+  // guest just waits for the RESULT message, handled in handleIncoming —
+  // both lineups are already fully populated locally either way, since
+  // every pick was broadcast as it happened.
 }
 
 // Simple strength-comparison sim: total rating advantage skews a
@@ -1353,22 +1557,27 @@ function simulateMatch(hostTotal, guestTotal, sport){
   }
 }
 
-function showResult(meScore, oppScore, meLineup, oppLineup){
+function showResult(hostScore, guestScore){
   clearPickTimer();
+  const myScore = G.mode==='host' ? hostScore : guestScore;
+  const oppScore = G.mode==='host' ? guestScore : hostScore;
+  const myLineup = G.mode==='host' ? G.hostLineup : G.guestLineup;
+  const oppLineup = G.mode==='host' ? G.guestLineup : G.hostLineup;
+
   const trophy = document.getElementById('resultTrophy');
-  if(meScore > oppScore){ trophy.textContent = 'VICTORY'; trophy.className = 'result-trophy win'; }
-  else if(meScore < oppScore){ trophy.textContent = 'DEFEAT'; trophy.className = 'result-trophy'; }
+  if(myScore > oppScore){ trophy.textContent = 'VICTORY'; trophy.className = 'result-trophy win'; }
+  else if(myScore < oppScore){ trophy.textContent = 'DEFEAT'; trophy.className = 'result-trophy'; }
   else { trophy.textContent = 'DRAW'; trophy.className = 'result-trophy draw'; }
   document.getElementById('resultMeName').textContent = G.username;
   document.getElementById('resultOppName').textContent = G.oppUsername || 'Opponent';
-  document.getElementById('resultMeScore').textContent = meScore;
+  document.getElementById('resultMeScore').textContent = myScore;
   document.getElementById('resultOppScore').textContent = oppScore;
-  document.getElementById('resultMeScore').classList.toggle('hi', meScore >= oppScore);
-  document.getElementById('resultOppScore').classList.toggle('hi', oppScore > meScore);
+  document.getElementById('resultMeScore').classList.toggle('hi', myScore >= oppScore);
+  document.getElementById('resultOppScore').classList.toggle('hi', oppScore > myScore);
   document.getElementById('resultMeHeader').textContent = G.username + "'s Squad";
   document.getElementById('resultOppHeader').textContent = (G.oppUsername||'Opponent') + "'s Squad";
-  renderRosterGrid('resultMeGrid', meLineup);
-  renderRosterGrid('resultOppGrid', oppLineup || []);
+  renderRosterGrid('resultMeGrid', myLineup);
+  renderRosterGrid('resultOppGrid', oppLineup);
   showScreen('resultScreen');
 }
 
